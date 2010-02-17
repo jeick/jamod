@@ -1,0 +1,44 @@
+        ------
+        Credits
+        ------
+        Dieter Wimberger
+        ------
+        2010-02-15
+        ------
+
+Thank You!
+
+    In this place we want to say thank you to everybody that is/was somehow
+    involved  in this project. Even if you did not end up here, whether it was
+    just a few comments,  criticism, some good ideas, patience, software to
+    build on or build with, or lines  of code, you have all taken part in 
+    making this project a working reality. 
+
+
+{{{./team-list.html}Project Team}}
+
+Special Credits
+
+    * {{{http://automation.unileoben.ac.at}Institute for Automation, University of Leoben, Austria}}
+    
+    * {{{http://www.tde.at}TDE Thonhauser Data Engineering GmbH}}
+    
+    * European Comission (EOLI project, INCO program, Contract #ICA4-CT-2002-10012)
+    
+
+Credits for Work and Services We Depend On</title>
+        
+        
+        * {{{http://java.sun.com/docs/books/jls/second_edition/html/j.title.doc.html}The 
+          Java language}}, for multiple reasons e.g. expressivity, portability 
+          etc.
+        
+        * {{{http://ant.apache.org/}The apache-ant project}}, {{{http://maven.apache.org/}The apache-maven project}} 
+          for the great build tools.
+        
+        * {{{http://www.sourceforge.net}SourceForge}}, for all the facilities 
+           provided to open source efforts, and all the people that made SF becoming 
+           a reality.
+        
+        []
+        
