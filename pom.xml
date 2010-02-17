@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>net.wimpi.modbus</groupId>
+  <artifactId>jamod</artifactId>
+  <packaging>jar</packaging>
+  <version>1.2-SNAPSHOT</version>
+  <name>jamod</name>
+  <url>http://jamod.sourceforge.net</url>
+  <description>
+    jamod is an object oriented implementation of the Modbus protocol, realized 100% in Java. It allows to quickly realize master and slave applications in various transport flavors (IP and serial).
+  </description>
+  
+  <licenses>
+    <license>
+      <name>Apache 2 Style License</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+      <comments>A business-friendly OSS license</comments>
+    </license>
+  </licenses>
+  
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+  
+  <dependencies>
+    <dependency>
+      <groupId>javax.comm</groupId>
+      <artifactId>comm</artifactId>
+      <version>3.0-u1</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>2.1</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.6.1</version>
+        <configuration>
+          <show>private</show>
+          <nohelp>true</nohelp>
+        </configuration>
+      </plugin>      
+    </plugins>
+  </build>
+
+  <distributionManagement>
+    <site>
+      <id>jamod.sf.net</id>
+      <url>scp://shell.sourceforge.net/home/groups/j/ja/jamod/htdocs</url>
+    </site>
+  </distributionManagement>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>2.1.2</version>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>dependencies</report>
+              <report>project-team</report>
+              <report>mailing-list</report>
+              <report>issue-tracking</report>
+              <report>license</report>
+              <report>scm</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.6.1</version>
+        <configuration>
+          <show>public</show>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
+
+  <issueManagement>
+    <system>Sourceforge Bug Tracker</system>
+    <url>http://sourceforge.net/tracker/?group_id=48413&amp;atid=452989</url>
+  </issueManagement>
+  
+  <scm>
+    <connection>scm:svn:https://jamod.svn.sourceforge.net/svnroot/jamod/trunk</connection>
+    <developerConnection>scm:svn:https://jamod.svn.sourceforge.net/svnroot/jamod/trunk</developerConnection>
+    <url>http://jamod.svn.sourceforge.net/viewvc/jamod/</url>
+  </scm> 
+  
+  <mailingLists>
+    <mailingList>
+      <name>jamod users mailing list</name>
+      <subscribe>jamod-users-join@lists.sourceforge.net</subscribe>
+      <unsubscribe>jamod-users-leave@lists.sourceforge.net</unsubscribe>
+      <post>jamod-users@lists.sourceforge.net</post>
+      <archive>http://sourceforge.net/mailarchive/forum.php?forum_name=jamod-users</archive>
+    </mailingList>
+    <mailingList>
+      <name>jamod development mailing list</name>
+      <subscribe>jamod-devel-join@lists.sourceforge.net</subscribe>
+      <unsubscribe>jamod-devel-leave@lists.sourceforge.net</unsubscribe>
+      <post>jamod-devel@lists.sourceforge.net</post>
+      <archive>http://sourceforge.net/mailarchive/forum.php?forum_name=jamod-devel</archive>
+    </mailingList>
+ </mailingLists>
+   
+  <developers>
+    <developer>
+      <id>wimpi</id>
+      <name>Dieter Wimberger</name>
+      <email>wimpi at users.sourceforge.net</email>
+      <roles>
+        <role>Project Manager</role>
+        <role>Architect</role>
+        <role>Developer</role>
+      </roles>
+      <timezone>-6</timezone>
+    </developer>         
+    <developer>
+      <id>jdcharlton</id>
+      <name>John Charlton</name>
+      <email>jdcharlton at users.sourceforge.net</email>
+      <roles>
+        <role>Developer</role>
+      </roles>
+      <timezone>-5</timezone>
+    </developer>         
+  </developers>
+
+  <contributors>
+    <contributor>
+      <name>Markus Kuespert</name>
+    </contributor>
+    <contributor>
+      <name>Matthew Lohbihler</name>
+    </contributor>
+    <contributor>
+      <name>Shane Harrison</name>
+    </contributor>
+
+  </contributors>
+
+</project>

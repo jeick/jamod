@@ -1,0 +1,50 @@
+        ------
+        About
+        ------
+        Dieter Wimberger
+        ------
+        2010-02-14
+        ------
+
+%{snippet|verbatim=false|file=src/site/resources/search_ad.txt}
+
+About
+
+    This project represents a Modbus implementation in 100% Java. It can be used to 
+    implement Modbus masters and slaves in various flavors:
+
+    * <<Serial>>
+    
+      ASCII, RTU (Master only), BIN
+
+    * <<IP>>    
+      
+      TCP, UDP
+      
+    The design of this library is fully object oriented, based on abstractions
+    which should support easy understanding, reusability and extensibility.
+
+    One important goal of this project is a codebase that is easily usable on 
+    a variety of Java Platforms (and devices). Many limited resource devices do
+    not provide Java 5 and Java 6 environments, and there are only limited 
+    possibilities for logging.
+
+    You might be looking at an offline copy. The last release version of this documents
+    can be found at ({{http://jamod.sourceforge.net}}). 
+    However, as the online version will reflect the latest release version, it might 
+    be better to browse the local version that came with the release you are using. 
+
+Target Audience
+
+    Java developers which need to access or share data using Modbus protocols.
+    
+    
+Notice
+
+    This project is free and open source and this will not change in the future.
+    However, working on the project requires resources (beyond the ones provided
+    by SF). If you are willing to support the project financially, you are welcome
+    to make donations (via SF/PayPal).
+    
+    Donated money will be used to pay Internet provider bills, provide and maintain
+    network facilities, enhance computing power and memory capacity.
