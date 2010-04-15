@@ -70,8 +70,7 @@ public final class WriteMultipleCoilsRequest
     super();
     setFunctionCode(Modbus.WRITE_MULTIPLE_COILS);
     setReference(ref);
-    m_Coils = new BitVector(count);
-    setDataLength(m_Coils.byteSize() + 5);
+    setCoils(new BitVector(count));
   }//constructor
 
   /**
@@ -85,8 +84,7 @@ public final class WriteMultipleCoilsRequest
     super();
     setFunctionCode(Modbus.WRITE_MULTIPLE_COILS);
     setReference(ref);
-    m_Coils = bv;
-    setDataLength(m_Coils.byteSize() + 5);
+    setCoils(bv);
   }//constructor
 
   public ModbusResponse createResponse() {
@@ -212,6 +210,7 @@ public final class WriteMultipleCoilsRequest
    */
   public void setCoils(BitVector bv) {
     m_Coils = bv;
+    setDataLength(m_Coils.byteSize() + 5);
   }//setCoils
 
   public void writeData(DataOutput dout)
