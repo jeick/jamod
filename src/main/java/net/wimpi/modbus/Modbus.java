@@ -151,10 +151,18 @@ public interface Modbus {
   public static final int DEFAULT_PORT = 502;
 
   /**
-   * Defines the maximum message length in bytes
+   * Defines the maximum message length for serial transport in bytes
    * (=<tt>256</tt>).
+   * RS232 / RS485 ADU = 253 bytes + Server address (1 byte) + CRC (2 bytes) = 256 bytes.
    */
   public static final int MAX_MESSAGE_LENGTH = 256;
+
+  /**
+   * Defines the maximum message length for IP transport in bytes
+   * (=<tt>260</tt>).
+   * TCP MODBUS ADU	= 253 bytes + MBAP (7 bytes) = 260 bytes.
+   */
+  public static final int MAX_IP_MESSAGE_LENGTH = 260;
 
   /**
    * Defines the default transaction identifier (=<tt>0</tt>).

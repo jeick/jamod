@@ -50,8 +50,8 @@ public class ModbusUDPTransport
    */
   public ModbusUDPTransport(UDPTerminal terminal) {
     m_Terminal = terminal;
-    m_ByteOut = new BytesOutputStream(Modbus.MAX_MESSAGE_LENGTH);
-    m_ByteIn = new BytesInputStream(Modbus.MAX_MESSAGE_LENGTH);
+    m_ByteOut = new BytesOutputStream(Modbus.MAX_IP_MESSAGE_LENGTH);
+    m_ByteIn = new BytesInputStream(Modbus.MAX_IP_MESSAGE_LENGTH);
   }//constructor
 
 
