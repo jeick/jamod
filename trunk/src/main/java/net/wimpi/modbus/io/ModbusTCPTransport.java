@@ -233,7 +233,7 @@ public class ModbusTCPTransport
     m_Output = new DataOutputStream(
         new BufferedOutputStream(socket.getOutputStream())
     );
-    m_ByteIn = new BytesInputStream(Modbus.MAX_MESSAGE_LENGTH);
+    m_ByteIn = new BytesInputStream(Modbus.MAX_IP_MESSAGE_LENGTH);
   }//prepareStreams
 
 }//class ModbusTCPTransport

@@ -33,7 +33,7 @@ import java.io.IOException;
 public final class ModbusUtil {
 
   private static BytesOutputStream m_ByteOut =
-      new BytesOutputStream(Modbus.MAX_MESSAGE_LENGTH);
+      new BytesOutputStream(Modbus.MAX_IP_MESSAGE_LENGTH);
 
   /**
    * Converts a <tt>ModbusMessage</tt> instance into
