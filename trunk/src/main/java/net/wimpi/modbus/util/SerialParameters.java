@@ -18,12 +18,12 @@ package net.wimpi.modbus.util;
 
 import net.wimpi.modbus.Modbus;
 
-import javax.comm.SerialPort;
+import gnu.io.SerialPort;
 import java.util.Properties;
 
 /**
  * Helper class wrapping all serial port communication parameters.
- * Very similar to the javax.comm demos, however, not the same.
+ * Very similar to the gnu.io demos, however, not the same.
  *
  * @author Dieter Wimberger
  * @author John Charlton
