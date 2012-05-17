@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.wimpi</groupId>
     <artifactId>jamod</artifactId>
     <packaging>jar</packaging>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.2</version>
     <name>jamod</name>
     <url>http://jamod.sourceforge.net</url>
     <description>
@@ -184,9 +183,9 @@
     </issueManagement>
 
     <scm>
-        <connection>scm:svn:https://jamod.svn.sourceforge.net/svnroot/jamod/trunk</connection>
-        <developerConnection>scm:svn:https://jamod.svn.sourceforge.net/svnroot/jamod/trunk</developerConnection>
-        <url>http://jamod.svn.sourceforge.net/viewvc/jamod/</url>
+        <connection>scm:svn:https://jamod.svn.sourceforge.net/svnroot/jamod/tags/jamod-1.2</connection>
+        <developerConnection>scm:svn:https://jamod.svn.sourceforge.net/svnroot/jamod/tags/jamod-1.2</developerConnection>
+        <url>http://jamod.svn.sourceforge.net/viewvc/jamod/tags/jamod-1.2</url>
     </scm>
 
     <mailingLists>
