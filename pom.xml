@@ -74,7 +74,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
-                <version>2.1</version>
+                <version>3.1</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -138,13 +138,6 @@
             <id>jamod.sf.net</id>
             <url>scp://shell.sourceforge.net/home/groups/j/ja/jamod/htdocs</url>
         </site>
-        <snapshotRepository>
-            <id>sonatype-nexus-snapshots</id>
-            <name>Sonatype Nexus Snapshots</name>
-            <url>
-                http://oss.sonatype.org/content/repositories/snapshots
-            </url>
-        </snapshotRepository>
     </distributionManagement>
 
     <reporting>
