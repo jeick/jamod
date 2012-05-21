@@ -4,7 +4,7 @@
     <groupId>net.wimpi</groupId>
     <artifactId>jamod</artifactId>
     <packaging>jar</packaging>
-    <version>1.2.2-SNAPSHOT</version>
+    <version>1.2.2</version>
     <name>jamod</name>
     <url>http://jamod.sourceforge.net</url>
     <description>
@@ -183,9 +183,9 @@
     </issueManagement>
 
     <scm>
-        <connection>scm:svn:https://jamod.svn.sourceforge.net/svnroot/jamod/tags/jamod-1.2</connection>
-        <developerConnection>scm:svn:https://jamod.svn.sourceforge.net/svnroot/jamod/tags/jamod-1.2</developerConnection>
-        <url>http://jamod.svn.sourceforge.net/viewvc/jamod/tags/jamod-1.2</url>
+        <connection>scm:svn:https://jamod.svn.sourceforge.net/svnroot/jamod/tags/jamod-1.2.2</connection>
+        <developerConnection>scm:svn:https://jamod.svn.sourceforge.net/svnroot/jamod/tags/jamod-1.2.2</developerConnection>
+        <url>http://jamod.svn.sourceforge.net/viewvc/jamod/tags/jamod-1.2.2</url>
     </scm>
 
     <mailingLists>
