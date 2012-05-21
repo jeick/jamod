@@ -45,12 +45,12 @@
       
       <item name="How-To" href="kb/howto_index.html">
         <item name="Process Image" href="kb/processimage.html"/>
-        <item name="Masters">
+        <item name="Masters" href="">
           <item name="Serial Master" href="kb/serial_master_howto.html"/>
           <item name="TCP Master" href="kb/tcp_master_howto.html"/>
           <item name="UDP Master" href="kb/udp_master_howto.html"/>        
         </item>
-        <item name="Slaves">
+        <item name="Slaves" href="">
           <item name="Serial Slave" href="kb/serial_slave_howto.html"/>
           <item name="TCP Slave" href="kb/tcp_slave_howto.html"/>
           <item name="UDP Slave" href="kb/udp_slave_howto.html"/>
