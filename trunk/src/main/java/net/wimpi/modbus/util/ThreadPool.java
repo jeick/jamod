@@ -16,6 +16,8 @@
 
 package net.wimpi.modbus.util;
 
+import java.util.ArrayList;
+
 /**
  * Class implementing a simple thread pool.
  *
@@ -26,6 +28,7 @@ public class ThreadPool {
 
   //instance attributes and associations
   private LinkedQueue m_TaskPool;
+	private ArrayList<PoolThread> m_Threads;
   private int m_Size = 1;
 
   /**
@@ -36,6 +39,7 @@ public class ThreadPool {
   public ThreadPool(int size) {
     m_Size = size;
     m_TaskPool = new LinkedQueue();
+		m_Threads = new ArrayList<PoolThread>();
     initPool();
   }//constructor
 
@@ -59,9 +63,19 @@ public class ThreadPool {
    */
   protected void initPool() {
     for (int i = m_Size; --i >= 0;) {
-      new PoolThread().start();
+			PoolThread toAdd = new PoolThread().start();
+			m_Threads.add(toAdd);
     }
   }//initPool
+
+	/**
+	 * Stops the pool, cleaning up the threads
+	 */
+	protected void killPool() {
+		for (PoolTread p : m_Threads) {
+			jj
+		}
+	}
 
   /**
    * Inner class implementing a thread that can be
@@ -71,6 +85,8 @@ public class ThreadPool {
    * @version @version@ (@date@)
    */
   private class PoolThread extends Thread {
+		private boolean keepRunning;
+		private Runnable task;
 
     /**
      * Runs the <tt>PoolThread</tt>.
@@ -80,16 +96,31 @@ public class ThreadPool {
      */
     public void run() {
       //System.out.println("Running PoolThread");
+			setRunning(true);
       do {
         try {
           //System.out.println(this.toString());
+					synchronized(task) {
+						task = (Runnable)m_TaskPool.take();
+						task.run();
+					}
           ((Runnable) m_TaskPool.take()).run();
         } catch (Exception ex) {
           //FIXME: Handle somehow!?
           ex.printStackTrace();
         }
-      } while (true);
+      } while (isRunning());
     }
+		public void setRunning(boolean run) {
+			synchronized (keepRunning){
+				keepRunning = run;
+			}
+		}
+		public boolean isRunning() {
+			synchronized (keepRunning) {
+				return keepRunning;
+			}
+		}
   }//PoolThread
 
 }//ThreadPool
