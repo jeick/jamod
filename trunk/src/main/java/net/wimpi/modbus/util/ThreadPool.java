@@ -63,7 +63,8 @@ public class ThreadPool {
    */
   protected void initPool() {
     for (int i = m_Size; --i >= 0;) {
-			PoolThread toAdd = new PoolThread().start();
+			PoolThread toAdd = new PoolThread();
+			toAdd.start();
 			m_Threads.add(toAdd);
     }
   }//initPool
@@ -71,9 +72,10 @@ public class ThreadPool {
 	/**
 	 * Stops the pool, cleaning up the threads
 	 */
-	protected void killPool() {
-		for (PoolTread p : m_Threads) {
-			jj
+	public void killPool() {
+		for (PoolThread p : m_Threads) {
+			p.setRunning(false);
+			p.interrupt();
 		}
 	}
 
@@ -85,8 +87,9 @@ public class ThreadPool {
    * @version @version@ (@date@)
    */
   private class PoolThread extends Thread {
-		private boolean keepRunning;
+		private Boolean keepRunning = new Boolean(false);
 		private Runnable task;
+		private Object taskLock = new Object();
 
     /**
      * Runs the <tt>PoolThread</tt>.
@@ -94,33 +97,33 @@ public class ThreadPool {
      * This method will infinitely loop, picking
      * up available tasks from the <tt>LinkedQueue</tt>.
      */
-    public void run() {
-      //System.out.println("Running PoolThread");
-			setRunning(true);
-      do {
-        try {
-          //System.out.println(this.toString());
-					synchronized(task) {
-						task = (Runnable)m_TaskPool.take();
-						task.run();
-					}
-          ((Runnable) m_TaskPool.take()).run();
-        } catch (Exception ex) {
-          //FIXME: Handle somehow!?
-          ex.printStackTrace();
-        }
-      } while (isRunning());
-    }
-		public void setRunning(boolean run) {
-			synchronized (keepRunning){
-				keepRunning = run;
+	public void run() {
+		//System.out.println("Running PoolThread");
+		setRunning(true);
+		do {
+			try {
+				synchronized(taskLock) {
+					task = (Runnable)m_TaskPool.take();
+					task.run();
+				}
+			} catch (Exception e) {
+				//Ignore, we were likely just interrupted.  Recheck if we should be running or not.
+				continue;
 			}
+		} while (isRunning());
+	}
+	
+	void setRunning(boolean run) {
+		synchronized (keepRunning){
+			keepRunning = run;
 		}
-		public boolean isRunning() {
-			synchronized (keepRunning) {
-				return keepRunning;
-			}
+	}
+	
+	boolean isRunning() {
+		synchronized (keepRunning) {
+			return keepRunning;
 		}
+	}
   }//PoolThread
 
 }//ThreadPool

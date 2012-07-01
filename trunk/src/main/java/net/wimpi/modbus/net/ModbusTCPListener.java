@@ -110,6 +110,7 @@ public class ModbusTCPListener
     try {
       m_ServerSocket.close();
       m_Listener.join();
+      m_ThreadPool.killPool();
     } catch (Exception ex) {
       //?
     }

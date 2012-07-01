@@ -23,6 +23,7 @@ package net.wimpi.modbus;
  * @author Dieter Wimberger
  * @version @version@ (@date@)
  */
+@SuppressWarnings("serial")
 public class ModbusException
     extends Exception {
 
