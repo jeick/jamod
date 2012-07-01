@@ -62,10 +62,9 @@ public class TCPMasterConnection {
       throws Exception {
     if(!m_Connected) {
       if(Modbus.debug) System.out.println("connect()");
-      m_Socket = new Socket(m_Address, m_Port);
-			m_Socket = new Socket();
-			java.net.InetSocketAddress sockaddr = new java.net.InetSocketAddress( m_Address, m_Port );
-			m_Socket.connect( sockaddr, m_Timeout );
+      m_Socket = new Socket();
+      java.net.InetSocketAddress sockaddr = new java.net.InetSocketAddress( m_Address, m_Port );
+      m_Socket.connect( sockaddr, m_Timeout );
       setTimeout(m_Timeout);
       prepareTransport();
       m_Connected = true;
