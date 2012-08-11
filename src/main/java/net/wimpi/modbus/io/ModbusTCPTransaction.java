@@ -183,7 +183,7 @@ public class ModbusTCPTransaction
       //I/O Exception problems.
       int retryCounter = 0;
 
-      while (retryCounter <= m_Retries) {
+      while (retryCounter < m_Retries) {
         try {
           //toggle and set the id
           m_Request.setTransactionID(c_TransactionID.increment());
