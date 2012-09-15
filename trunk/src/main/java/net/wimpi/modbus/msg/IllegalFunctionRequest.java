@@ -65,4 +65,9 @@ public class IllegalFunctionRequest
     }
   }//readData
 
+	@Override
+	public int getReference() {
+		return 0;
+	}
+
 }//IllegalFunctionRequest
