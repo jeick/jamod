@@ -153,5 +153,9 @@ public final class ReadInputRegistersRequest
     m_Reference = din.readUnsignedShort();
     m_WordCount = din.readUnsignedShort();
   }//readData
+  
+  public String toString() {
+	  return "ReadInputRegistersRequest - Ref: "+m_Reference+" Words: "+m_WordCount;
+  }
 
 }//class ReadInputRegistersRequest

@@ -171,6 +171,10 @@ public final class ReadInputDiscretesRequest
     m_Reference = din.readUnsignedShort();
     m_BitCount = din.readUnsignedShort();
   }//readData
+  
+  public String toString() {
+	  return "ReadInputDiscretesRequest - Ref: "+m_Reference+" Count: "+m_BitCount;
+  }
 
 /*
   protected void assembleData() throws IOException {

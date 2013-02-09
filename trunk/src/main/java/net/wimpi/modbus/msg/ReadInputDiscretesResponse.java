@@ -145,6 +145,7 @@ public final class ReadInputDiscretesResponse
 
     //decode bytes into bitvector
     m_Discretes = BitVector.createBitVector(data);
+    m_BitCount = count;
 
     //update data length
     setDataLength(count + 1);

@@ -153,5 +153,9 @@ public final class ReadMultipleRegistersRequest
     m_Reference = din.readUnsignedShort();
     m_WordCount = din.readUnsignedShort();
   }//readData
+  
+  public String toString() {
+	  return "ReadMultipleRegistersRequest - Ref: "+m_Reference+" Words: "+m_WordCount;
+  }
 
 }//class ReadMultipleRegistersRequest
