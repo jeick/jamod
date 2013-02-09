@@ -136,5 +136,9 @@ public final class ReadCoilsResponse
     //update data length
     setDataLength(count + 1);
   }//readData
+  
+  public String toString() {
+	  return "ReadCoilsResponse - Coils: "+getBitCount();
+  }
 
 }//class ReadCoilsResponse

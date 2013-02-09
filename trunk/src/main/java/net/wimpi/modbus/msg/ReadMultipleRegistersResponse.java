@@ -171,6 +171,10 @@ public final class ReadMultipleRegistersResponse
     //update data length
     setDataLength(getByteCount() + 1);
   }//readData
+  
+  public String toString() {
+	  return "ReadMultipleRegistersResponse - Words: "+getWordCount();
+  }
 
 
 }//class ReadMultipleRegistersResponse
