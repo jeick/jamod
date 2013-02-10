@@ -114,6 +114,10 @@ public final class WriteSingleRegisterResponse
     //update data length
     setDataLength(4);
   }//readData
+  
+  public String toString() {
+	  return "WriteSingleRegisterResponse - Ref: "+m_Reference+" Value: "+m_RegisterValue;
+  }
 /*
   protected void assembleData() throws IOException {
     m_DataOut.writeShort(getReference());

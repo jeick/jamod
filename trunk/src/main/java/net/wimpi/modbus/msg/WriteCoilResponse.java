@@ -133,5 +133,9 @@ public final class WriteCoilResponse
     //update data length
     setDataLength(4);
   }//readData
+  
+  public String toString() {
+	  return "WriteCoilResponse - Ref: "+m_Reference+" Coil: "+m_Coil;
+  }
 
 }//class WriteCoilResponse

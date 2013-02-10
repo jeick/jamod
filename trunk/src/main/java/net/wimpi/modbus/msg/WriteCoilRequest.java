@@ -169,5 +169,9 @@ public final class WriteCoilRequest
     //skip last byte
     din.readByte();
   }//readData
+  
+  public String toString() {
+	  return "WriteCoilRequest - Ref: "+m_Reference+" coil: "+m_Coil;
+  }
 
 }//class WriteCoilRequest

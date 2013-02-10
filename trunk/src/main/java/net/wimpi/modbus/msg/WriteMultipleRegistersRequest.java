@@ -272,5 +272,9 @@ public final class WriteMultipleRegistersRequest
       m_NonWordDataHandler.readData(din, m_Reference, wc);
     }
   }//readData
+  
+  public String toString() {
+	  return "WriteMultipleRegistersRequest - Ref: "+m_Reference+" Registers: "+this.getWordCount();
+  }
 
 }//class WriteMultipleRegistersRequest

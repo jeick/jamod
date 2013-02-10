@@ -128,5 +128,9 @@ public final class WriteMultipleRegistersResponse
     //update data length
     setDataLength(4);
   }//readData
+  
+  public String toString () {
+	  return "WriteMultipleRegistersResponse - Ref: "+m_Reference+" Words: "+m_WordCount;
+  }
 
 }//class WriteMultipleRegistersResponse

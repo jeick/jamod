@@ -238,5 +238,8 @@ public final class WriteMultipleCoilsRequest
     setDataLength(count + 5);
   }//readData
 
+  public String toString() {
+	  return"WriteMultipleCoilsRequest - Ref: "+m_Reference+" Coils: "+m_Coils.size();
+  }
 
 }//class WriteMultipleCoilsRequest

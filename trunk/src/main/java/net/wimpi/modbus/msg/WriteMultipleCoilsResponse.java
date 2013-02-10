@@ -110,5 +110,9 @@ public final class WriteMultipleCoilsResponse
     m_Reference = din.readUnsignedShort();
     m_BitCount = din.readUnsignedShort();
   }//readData
+  
+  public String toString() {
+	  return "WriteMultpleCoilsResponse - Ref: "+m_Reference+" Coils: "+m_BitCount;
+  }
 
 }//class ReadCoilsResponse
