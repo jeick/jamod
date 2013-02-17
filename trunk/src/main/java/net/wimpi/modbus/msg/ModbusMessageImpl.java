@@ -143,7 +143,7 @@ public abstract class ModbusMessageImpl
   }//getFunctionCode
   
   
-  protected void setReference(int ref) {
+  public void setReference(int ref) {
 	  m_Reference = ref;
   }
   public int getReference() {

@@ -185,6 +185,7 @@ public class ModbusSerialTransaction
             m_IO.writeMessage(m_Request);
             //read response message
             m_Response = m_IO.readResponse();
+            m_Response.setReference(m_Request.getReference());
             finished = true;
           } catch (ModbusIOException e) {
             if (++tries >= m_Retries) {

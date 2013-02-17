@@ -191,6 +191,7 @@ public class ModbusTCPTransaction
           m_IO.writeMessage(m_Request);
           //read response message
           m_Response = m_IO.readResponse();
+          m_Response.setReference(m_Request.getReference());
           break;
         } catch (ModbusIOException ex) {
           if (retryCounter == m_Retries) {
