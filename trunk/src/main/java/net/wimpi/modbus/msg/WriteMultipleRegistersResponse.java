@@ -34,7 +34,6 @@ public final class WriteMultipleRegistersResponse
 
   //instance attributes
   private int m_WordCount;
-  private int m_Reference;
 
   /**
    * Constructs a new <tt>WriteMultipleRegistersResponse</tt>
@@ -53,33 +52,10 @@ public final class WriteMultipleRegistersResponse
    */
   public WriteMultipleRegistersResponse(int reference, int wordcount) {
     super();
-    m_Reference = reference;
+    setReference(reference);
     m_WordCount = wordcount;
     setDataLength(4);
   }//constructor
-
-  /**
-   * Sets the reference of the register to start writing to
-   * with this <tt>WriteMultipleRegistersResponse</tt>.
-   * <p>
-   * @param ref the reference of the register
-   *        to start writing to as <tt>int</tt>.
-   */
-  private void setReference(int ref) {
-    m_Reference = ref;
-  }//setReference
-
-  /**
-   * Returns the reference of the register to start
-   * writing to with this
-   * <tt>WriteMultipleRegistersResponse</tt>.
-   * <p>
-   * @return the reference of the register
-   *        to start writing to as <tt>int</tt>.
-   */
-  public int getReference() {
-    return m_Reference;
-  }//getReference
 
   /**
    * Returns the number of bytes that have been written.
@@ -114,7 +90,7 @@ public final class WriteMultipleRegistersResponse
 
   public void writeData(DataOutput dout)
       throws IOException {
-    dout.writeShort(m_Reference);
+    dout.writeShort(getReference());
     dout.writeShort(getWordCount());
   }//writeData
 
@@ -130,7 +106,7 @@ public final class WriteMultipleRegistersResponse
   }//readData
   
   public String toString () {
-	  return "WriteMultipleRegistersResponse - Ref: "+m_Reference+" Words: "+m_WordCount;
+	  return "WriteMultipleRegistersResponse - Ref: "+getReference()+" Words: "+m_WordCount;
   }
 
 }//class WriteMultipleRegistersResponse

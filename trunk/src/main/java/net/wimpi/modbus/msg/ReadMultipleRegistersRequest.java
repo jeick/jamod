@@ -93,6 +93,7 @@ public final class ReadMultipleRegistersRequest
     }
     response.setUnitID(this.getUnitID());
     response.setFunctionCode(this.getFunctionCode());
+    response.setReference(m_Reference);
 
     return response;
   }//createResponse

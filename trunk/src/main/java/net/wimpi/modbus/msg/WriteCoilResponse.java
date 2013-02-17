@@ -36,7 +36,6 @@ public final class WriteCoilResponse
 
   //instance attributes
   private boolean m_Coil = false;
-  private int m_Reference;
 
   /**
    * Constructs a new <tt>WriteCoilResponse</tt>
@@ -84,27 +83,6 @@ public final class WriteCoilResponse
     return m_Coil;
   }//getCoil
 
-  /**
-   * Returns the reference of the register of the coil
-   * that has been written to with the request.
-   * <p>
-   * @return the reference of the coil's register.
-   */
-  public int getReference() {
-    return m_Reference;
-  }//getReference
-
-  /**
-   * Sets the reference of the register of the coil
-   * that has been written to with the request.
-   * <p>
-   * @param ref the reference of the coil's register.
-   */
-  private void setReference(int ref) {
-    m_Reference = ref;
-    //setChanged(true);
-  }//setReference
-
   public void writeData(DataOutput dout)
       throws IOException {
     dout.writeShort(getReference());
@@ -135,7 +113,7 @@ public final class WriteCoilResponse
   }//readData
   
   public String toString() {
-	  return "WriteCoilResponse - Ref: "+m_Reference+" Coil: "+m_Coil;
+	  return "WriteCoilResponse - Ref: "+getReference()+" Coil: "+m_Coil;
   }
 
 }//class WriteCoilResponse

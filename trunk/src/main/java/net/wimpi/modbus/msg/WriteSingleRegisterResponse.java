@@ -33,7 +33,6 @@ public final class WriteSingleRegisterResponse
     extends ModbusResponse {
 
   //instance attributes
-  private int m_Reference;
   private int m_RegisterValue;
 
   /**
@@ -80,27 +79,6 @@ public final class WriteSingleRegisterResponse
     m_RegisterValue = value;
   }//setRegisterValue
 
-  /**
-   * Returns the reference of the register
-   * that has been written to.
-   * <p>
-   * @return the reference of the written register.
-   */
-  public int getReference() {
-    return m_Reference;
-  }//getReference
-
-  /**
-   * Sets the reference of the register that has
-   * been written to.
-   * <p>
-   * @param ref the reference of the written register.
-   */
-  private void setReference(int ref) {
-    m_Reference = ref;
-    //setChanged(true);
-  }//setReference
-
   public void writeData(DataOutput dout)
       throws IOException {
     dout.writeShort(getReference());
@@ -116,7 +94,7 @@ public final class WriteSingleRegisterResponse
   }//readData
   
   public String toString() {
-	  return "WriteSingleRegisterResponse - Ref: "+m_Reference+" Value: "+m_RegisterValue;
+	  return "WriteSingleRegisterResponse - Ref: "+getReference()+" Value: "+m_RegisterValue;
   }
 /*
   protected void assembleData() throws IOException {

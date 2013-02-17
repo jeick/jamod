@@ -40,6 +40,7 @@ public abstract class ModbusMessageImpl
   private int m_DataLength;
   private int m_UnitID = Modbus.DEFAULT_UNIT_ID;
   private int m_FunctionCode;
+  private int m_Reference = 0;
   private boolean m_Headless = false;       //flag for headerless (serial) transport
 
   /*** Header ******************************************/
@@ -140,6 +141,14 @@ public abstract class ModbusMessageImpl
   public int getFunctionCode() {
     return m_FunctionCode;
   }//getFunctionCode
+  
+  
+  protected void setReference(int ref) {
+	  m_Reference = ref;
+  }
+  public int getReference() {
+	  return m_Reference;
+  }
 
   /**
    * Sets the function code of this <tt>ModbusMessage</tt>.<br>

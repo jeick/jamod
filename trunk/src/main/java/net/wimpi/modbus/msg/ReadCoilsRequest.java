@@ -97,6 +97,7 @@ public final class ReadCoilsRequest
     }
     response.setUnitID(this.getUnitID());
     response.setFunctionCode(this.getFunctionCode());
+    response.setReference(m_Reference);
 
     for (int i = 0; i < douts.length; i++) {
       response.setCoilStatus(i, douts[i].isSet());

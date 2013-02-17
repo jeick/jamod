@@ -38,7 +38,6 @@ public final class WriteMultipleCoilsResponse
     extends ModbusResponse {
 
   //instance attributes
-  private int m_Reference;
   private int m_BitCount;
 
   /**
@@ -62,20 +61,9 @@ public final class WriteMultipleCoilsResponse
     super();
     setFunctionCode(Modbus.WRITE_MULTIPLE_COILS);
     setDataLength(4);
-    m_Reference = ref;
+    setReference(ref);
     m_BitCount = count;
   }//constructor(int)
-
-  /**
-   * Returns the reference of the register to to start
-   * reading from with this <tt>WriteMultipleCoilsRequest</tt>.
-   * <p>
-   * @return the reference of the register
-   *        to start reading from as <tt>int</tt>.
-   */
-  public int getReference() {
-    return m_Reference;
-  }//getReference
 
   /**
    * Returns the number of bits (i.e. coils)
@@ -100,19 +88,19 @@ public final class WriteMultipleCoilsResponse
   public void writeData(DataOutput dout)
       throws IOException {
 
-    dout.writeShort(m_Reference);
+    dout.writeShort(getReference());
     dout.writeShort(m_BitCount);
   }//writeData
 
   public void readData(DataInput din)
       throws IOException {
 
-    m_Reference = din.readUnsignedShort();
+    setReference(din.readUnsignedShort());
     m_BitCount = din.readUnsignedShort();
   }//readData
   
   public String toString() {
-	  return "WriteMultpleCoilsResponse - Ref: "+m_Reference+" Coils: "+m_BitCount;
+	  return "WriteMultpleCoilsResponse - Ref: "+getReference()+" Coils: "+m_BitCount;
   }
 
 }//class ReadCoilsResponse

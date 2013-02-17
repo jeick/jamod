@@ -105,6 +105,7 @@ public final class ReadInputDiscretesRequest
     }
     response.setUnitID(this.getUnitID());
     response.setFunctionCode(this.getFunctionCode());
+    response.setReference(m_Reference);
 
     for (int i = 0; i < dins.length; i++) {
       response.setDiscreteStatus(i, dins[i].isSet());
