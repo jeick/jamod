@@ -37,6 +37,7 @@ public final class WriteCoilResponse
   //instance attributes
   private boolean m_Coil = false;
 
+
   /**
    * Constructs a new <tt>WriteCoilResponse</tt>
    * instance.

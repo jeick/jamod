@@ -177,7 +177,7 @@ public final class ReadInputRegistersResponse
     //update data length
     setDataLength(getByteCount() + 1);
   }//readData
-  
+
   public String toString() {
 	  return "ReadInputRegisterResponse - Words: "+getWordCount();
   }

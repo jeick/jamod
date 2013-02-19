@@ -28,7 +28,7 @@ public class ThreadPool {
 
   //instance attributes and associations
   private LinkedQueue m_TaskPool;
-	private ArrayList<PoolThread> m_Threads;
+  private ArrayList<PoolThread> m_Threads;
   private int m_Size = 1;
 
   /**
@@ -39,7 +39,7 @@ public class ThreadPool {
   public ThreadPool(int size) {
     m_Size = size;
     m_TaskPool = new LinkedQueue();
-		m_Threads = new ArrayList<PoolThread>();
+	m_Threads = new ArrayList<PoolThread>();
     initPool();
   }//constructor
 
@@ -63,9 +63,9 @@ public class ThreadPool {
    */
   protected void initPool() {
     for (int i = m_Size; --i >= 0;) {
-			PoolThread toAdd = new PoolThread();
-			toAdd.start();
-			m_Threads.add(toAdd);
+		PoolThread toAdd = new PoolThread();
+		toAdd.start();
+		m_Threads.add(toAdd);
     }
   }//initPool
 
@@ -87,9 +87,9 @@ public class ThreadPool {
    * @version @version@ (@date@)
    */
   private class PoolThread extends Thread {
-		private Boolean keepRunning = new Boolean(false);
-		private Runnable task;
-		private Object taskLock = new Object();
+	private Boolean keepRunning = new Boolean(false);
+	private Runnable task;
+	private Object taskLock = new Object();
 
     /**
      * Runs the <tt>PoolThread</tt>.

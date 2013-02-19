@@ -158,7 +158,7 @@ public final class WriteSingleRegisterRequest
     m_Reference = din.readUnsignedShort();
     m_Register = ModbusCoupler.getReference().getProcessImageFactory().createRegister(din.readByte(), din.readByte());
   }//readData
-  
+
   public String toString() {
 	  return "WriteSingleRegisterRequest - Ref: "+m_Reference+" Value: "+m_Register.getValue();
   }

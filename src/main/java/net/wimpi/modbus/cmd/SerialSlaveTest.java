@@ -72,8 +72,7 @@ public class SerialSlaveTest {
 
       //4. Set up serial listener
       listener = new ModbusSerialListener(params);
-      listener.setListening(true);
-
+      listener.start();
     } catch (Exception ex) {
       ex.printStackTrace();
     }

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<<<<<<< HEAD
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
@@ -159,5 +160,277 @@
     </contributor>
 
   </contributors>
+=======
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>net.wimpi</groupId>
+    <artifactId>jamod</artifactId>
+    <packaging>jar</packaging>
+    <version>1.2.3-SNAPSHOT</version>
+    <name>jamod</name>
+    <url>http://jamod.sourceforge.net</url>
+    <description>
+        jamod is an object oriented implementation of the Modbus protocol, realized 100% in Java. It allows to quickly
+        realize master and slave applications in various transport flavors (IP and serial).
+    </description>
+
+    <licenses>
+        <license>
+            <name>Apache 2 Style License</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+            <comments>A business-friendly OSS license</comments>
+        </license>
+    </licenses>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <serial.package>gnu.io</serial.package>
+
+        <!-- RXTX gnu.io -->
+        <serial.package.gid>org.rxtx</serial.package.gid>
+        <serial.package.aid>rxtx</serial.package.aid>
+        <serial.package.version>2.1.7</serial.package.version>
+
+        <!-- Reference Implementation, needs manual install
+        <serial.package.gid>javax.comm</serial.package.gid>
+        <serial.package.aid>comm</serial.package.aid>
+        <serial.package.version>3.0-u1</serial.package.version>
+        -->
+    </properties>
+
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
+    
+    <dependencies>
+        <dependency>
+            <groupId>${serial.package.gid}</groupId>
+            <artifactId>${serial.package.aid}</artifactId>
+            <version>${serial.package.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.1.2</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.7</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.1</version>
+                <dependencies>
+                  <dependency>
+          			<groupId>org.apache.maven.wagon</groupId>
+          			<artifactId>wagon-ssh</artifactId>
+          			<version>2.2</version>
+        		  </dependency>
+      			</dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.6.1</version>
+                <configuration>
+                    <show>private</show>
+                    <nohelp>true</nohelp>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.google.code.maven-replacer-plugin</groupId>
+                <artifactId>replacer</artifactId>
+                <version>1.5.0</version>
+                <executions>
+                    <execution>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>replace</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <includes>
+                        <include>target/filtered-sources/java/net/wimpi/modbus/io/ModbusSerialTransport.java</include>
+                        <include>target/filtered-sources/java/net/wimpi/modbus/net/SerialConnection.java</include>
+                        <include>target/filtered-sources/java/net/wimpi/modbus/util/SerialParameters.java</include>
+                    </includes>
+                    <replacements>
+                        <replacement>
+                            <token>gnu.io</token>
+                            <value>${serial.package}</value>
+                        </replacement>
+                    </replacements>
+                </configuration>
+            </plugin>
+        </plugins>
+
+        <!-- Source File filtering to support serial packages -->
+        <filters>
+            <filter>filter.properties</filter>
+        </filters>
+
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <filtering>true</filtering>
+                <targetPath>../filtered-sources/java</targetPath>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <sourceDirectory>target/filtered-sources/java</sourceDirectory>
+        <!-- Source File filtering -->
+    </build>
+
+    <distributionManagement>
+        <site>
+            <id>jamod.sf.net</id>
+            <url>scp://web.sourceforge.net/home/groups/j/ja/jamod/htdocs</url>
+        </site>
+    </distributionManagement>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.4</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>dependencies</report>
+                            <report>project-team</report>
+                            <report>mailing-list</report>
+                            <report>issue-tracking</report>
+                            <report>license</report>
+                            <report>scm</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.6.1</version>
+                <configuration>
+                    <show>public</show>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
+
+    <issueManagement>
+        <system>Sourceforge Bug Tracker</system>
+        <url>http://sourceforge.net/tracker/?group_id=48413&amp;atid=452989</url>
+    </issueManagement>
+
+    <scm>
+        <connection>scm:svn:https://jamod.svn.sourceforge.net/svnroot/jamod/tags/jamod-1.2</connection>
+        <developerConnection>scm:svn:https://jamod.svn.sourceforge.net/svnroot/jamod/tags/jamod-1.2</developerConnection>
+        <url>http://jamod.svn.sourceforge.net/viewvc/jamod/tags/jamod-1.2</url>
+    </scm>
+
+    <mailingLists>
+        <mailingList>
+            <name>jamod users mailing list</name>
+            <subscribe>jamod-users-join@lists.sourceforge.net</subscribe>
+            <unsubscribe>jamod-users-leave@lists.sourceforge.net</unsubscribe>
+            <post>jamod-users@lists.sourceforge.net</post>
+            <archive>http://sourceforge.net/mailarchive/forum.php?forum_name=jamod-users</archive>
+        </mailingList>
+        <mailingList>
+            <name>jamod development mailing list</name>
+            <subscribe>jamod-devel-join@lists.sourceforge.net</subscribe>
+            <unsubscribe>jamod-devel-leave@lists.sourceforge.net</unsubscribe>
+            <post>jamod-devel@lists.sourceforge.net</post>
+            <archive>http://sourceforge.net/mailarchive/forum.php?forum_name=jamod-devel</archive>
+        </mailingList>
+    </mailingLists>
+
+    <developers>
+        <developer>
+            <id>wimpi</id>
+            <name>Dieter Wimberger</name>
+            <email>wimpi at users.sourceforge.net</email>
+            <roles>
+                <role>Project Manager</role>
+                <role>Architect</role>
+                <role>Developer</role>
+            </roles>
+            <timezone>+2</timezone>
+        </developer>
+        <developer>
+            <id>jdcharlton</id>
+            <name>John Charlton</name>
+            <email>jdcharlton at users.sourceforge.net</email>
+            <roles>
+                <role>Developer</role>
+            </roles>
+            <timezone>-5</timezone>
+        </developer>
+    </developers>
+
+    <contributors>
+        <contributor>
+            <name>Markus Kuespert</name>
+        </contributor>
+        <contributor>
+            <name>Matthew Lohbihler</name>
+        </contributor>
+        <contributor>
+            <name>Shane Harrison</name>
+        </contributor>
+    </contributors>
+
+    <profiles>
+        <profile>
+            <id>release-sign-artifacts</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.4</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+>>>>>>> b0e99dd6336efe72ae5eeec015ba5f8d8d8ebacb
 
 </project>

@@ -79,6 +79,8 @@ public final class WriteSingleRegisterResponse
     m_RegisterValue = value;
   }//setRegisterValue
 
+
+
   public void writeData(DataOutput dout)
       throws IOException {
     dout.writeShort(getReference());
@@ -96,6 +98,7 @@ public final class WriteSingleRegisterResponse
   public String toString() {
 	  return "WriteSingleRegisterResponse - Ref: "+getReference()+" Value: "+m_RegisterValue;
   }
+
 /*
   protected void assembleData() throws IOException {
     m_DataOut.writeShort(getReference());

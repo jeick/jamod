@@ -141,14 +141,14 @@ public abstract class ModbusMessageImpl
   public int getFunctionCode() {
     return m_FunctionCode;
   }//getFunctionCode
-  
-  
+
   public void setReference(int ref) {
 	  m_Reference = ref;
   }
   public int getReference() {
 	  return m_Reference;
   }
+
 
   /**
    * Sets the function code of this <tt>ModbusMessage</tt>.<br>

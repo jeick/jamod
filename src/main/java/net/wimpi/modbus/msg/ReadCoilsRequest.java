@@ -163,9 +163,10 @@ public final class ReadCoilsRequest
     m_Reference = din.readUnsignedShort();
     m_BitCount = din.readUnsignedShort();
   }//readData
-  
+
   public String toString() {
 	  return "ReadCoilsRequest - Ref: "+m_Reference+" Count: "+m_BitCount;
   }
+
 
 }//class ReadCoilsRequest

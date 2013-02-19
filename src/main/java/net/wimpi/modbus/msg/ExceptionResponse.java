@@ -90,7 +90,7 @@ public class ExceptionResponse
       throws IOException {
     m_ExceptionCode = din.readUnsignedByte();
   }//readData
-  
+
   public String toString() {
 	  return "ExceptionResponse - Exception code: "+m_ExceptionCode;
   }

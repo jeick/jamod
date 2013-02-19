@@ -122,7 +122,7 @@ class UDPMasterTerminal
   public synchronized void activate()
       throws Exception {
     if (!isActive()) {
-      if (Modbus.debug) System.out.println("UDPMasterTerminal::activate()::laddr=:" + m_LocalAddress.toString() + ":lport=" + m_LocalPort);
+      if (Modbus.debug) System.out.println("UDPMasterTerminal::activate()::laddr=:" + m_LocalAddress + ":lport=" + m_LocalPort);
       if (m_Socket == null) {
         if (m_LocalAddress != null && m_LocalPort != -1) {
           m_Socket = new DatagramSocket(m_LocalPort, m_LocalAddress);

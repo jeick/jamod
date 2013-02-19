@@ -23,7 +23,11 @@ import java.util.Properties;
 
 /**
  * Helper class wrapping all serial port communication parameters.
+<<<<<<< HEAD
  * Very similar to the gnu.io demos, however, not the same.
+=======
+ * Very similar to the javax.comm demos, however, not the same.
+>>>>>>> b0e99dd6336efe72ae5eeec015ba5f8d8d8ebacb
  *
  * @author Dieter Wimberger
  * @author John Charlton

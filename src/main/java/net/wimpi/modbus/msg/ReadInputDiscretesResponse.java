@@ -150,7 +150,7 @@ public final class ReadInputDiscretesResponse
     //update data length
     setDataLength(count + 1);
   }//readData
-  
+
   public String toString() {
 	  return "ReadInputDiscretesResponse - Coils: "+getBitCount();
   }

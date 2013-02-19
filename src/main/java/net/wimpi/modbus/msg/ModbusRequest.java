@@ -111,7 +111,7 @@ public abstract class ModbusRequest
     }
     return request;
   }//createModbusRequest
-  
+
   public abstract int getReference();
 
 }//class ModbusRequest
