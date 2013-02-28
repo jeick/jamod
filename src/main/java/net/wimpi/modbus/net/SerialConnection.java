@@ -182,7 +182,7 @@ public class SerialConnection
     int oldDatabits = m_SerialPort.getDataBits();
     int oldStopbits = m_SerialPort.getStopBits();
     int oldParity = m_SerialPort.getParity();
-    int oldFlowControl = m_SerialPort.getFlowControlMode();
+    //int oldFlowControl = m_SerialPort.getFlowControlMode();
 
     // Set connection parameters, if set fails return parameters object
     // to original state.

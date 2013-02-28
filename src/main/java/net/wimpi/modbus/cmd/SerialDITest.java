@@ -12,6 +12,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Original implementation by jamod development team.
+ * This file modified by Charles Hache <chache@brood.ca>
  ***/
 
 package net.wimpi.modbus.cmd;
@@ -109,7 +112,6 @@ public class SerialDITest {
         res = (ReadInputDiscretesResponse) trans.getResponse();
         if (Modbus.debug) System.out.println("Response: " + res.getHexMessage());
         BitVector inputs = res.getDiscretes();
-        byte ret[] = new byte[inputs.size()];
         for (int i = 0; i < count; i++) {
           System.out.println("Bit " + i + " = " + inputs.getBit(i));
         }

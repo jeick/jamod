@@ -12,6 +12,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Original implementation by jamod development team.
+ * This file modified by Charles Hache <chache@brood.ca>
  ***/
 
 package net.wimpi.modbus.cmd;
@@ -87,7 +90,7 @@ public class UDPDOTest {
 
       //2. Open the connection
       conn = new UDPMasterConnection(addr);
-      conn.setPort(502);
+      conn.setPort(port);
       conn.connect();
 
       //3. Prepare a request

@@ -20,9 +20,7 @@
 package net.wimpi.modbus.msg;
 
 import java.io.DataInput;
-import java.io.DataInputStream;
 import java.io.DataOutput;
-import java.io.EOFException;
 import java.io.IOException;
 
 import net.wimpi.modbus.Modbus;

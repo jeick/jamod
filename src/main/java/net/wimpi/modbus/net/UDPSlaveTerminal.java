@@ -12,6 +12,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Original implementation by jamod development team.
+ * This file modified by Charles Hache <chache@brood.ca>
  ***/
 
 package net.wimpi.modbus.net;
@@ -37,12 +40,12 @@ class UDPSlaveTerminal
 
   //instance attributes
   private DatagramSocket m_Socket;
-  private int m_Timeout = Modbus.DEFAULT_TIMEOUT;
+  //private int m_Timeout = Modbus.DEFAULT_TIMEOUT;
   private boolean m_Active;
   protected InetAddress m_LocalAddress;
   private int m_LocalPort = Modbus.DEFAULT_PORT;
   protected ModbusUDPTransport m_ModbusTransport;
-  private int m_Retries = Modbus.DEFAULT_RETRIES;
+  //private int m_Retries = Modbus.DEFAULT_RETRIES;
 
   private LinkedQueue m_SendQueue;
   private LinkedQueue m_ReceiveQueue;
@@ -51,21 +54,19 @@ class UDPSlaveTerminal
   private Thread m_Receiver;
   private Thread m_Sender;
 
-  protected Hashtable m_Requests;
+  protected Hashtable<Integer, DatagramPacket> m_Requests;
 
   protected UDPSlaveTerminal() {
     m_SendQueue = new LinkedQueue();
     m_ReceiveQueue = new LinkedQueue();
-    //m_Requests = new Hashtable(342,0.75F);
-    m_Requests = new Hashtable(342);
+    m_Requests = new Hashtable<Integer, DatagramPacket>(342);
   }//constructor
 
   protected UDPSlaveTerminal(InetAddress localaddress) {
     m_LocalAddress = localaddress;
     m_SendQueue = new LinkedQueue();
     m_ReceiveQueue = new LinkedQueue();
-    //m_Requests = new Hashtable(342, 0.75F);
-    m_Requests = new Hashtable(342);
+    m_Requests = new Hashtable<Integer, DatagramPacket>(342);
   }//constructor
 
   public InetAddress getLocalAddress() {
@@ -241,7 +242,7 @@ class UDPSlaveTerminal
           m_Socket.send(res);
           if (Modbus.debug) System.out.println("Sent package from queue.");
         } catch (Exception ex) {
-          DEBUG:ex.printStackTrace();
+          ex.printStackTrace();
         }
       } while (m_Continue || !m_SendQueue.isEmpty());
     }//run
@@ -275,7 +276,7 @@ class UDPSlaveTerminal
           m_ReceiveQueue.put(buffer);
           if (Modbus.debug) System.out.println("Received package to queue.");
         } catch (Exception ex) {
-          DEBUG:ex.printStackTrace();
+          ex.printStackTrace();
         }
       } while (m_Continue);
     }//run

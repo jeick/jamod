@@ -262,7 +262,8 @@ public final class WriteMultipleRegistersRequest
     m_Reference = din.readShort();
     //read lengths
     int wc = din.readUnsignedShort();
-    int bc = din.readUnsignedByte();
+    @SuppressWarnings("unused") 
+	int bc = din.readUnsignedByte();
 
     //read values
     if (m_NonWordDataHandler == null) {

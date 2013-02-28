@@ -12,6 +12,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Original implementation by jamod development team.
+ * This file modified by Charles Hache <chache@brood.ca>
  ***/
 
 package net.wimpi.modbus.procimg;
@@ -30,20 +33,20 @@ public class SimpleProcessImage
     implements ProcessImageImplementation {
 
   //instance attributes
-  protected Vector m_DigitalInputs;
-  protected Vector m_DigitalOutputs;
-  protected Vector m_InputRegisters;
-  protected Vector m_Registers;
+  protected Vector<DigitalIn> m_DigitalInputs;
+  protected Vector<DigitalOut> m_DigitalOutputs;
+  protected Vector<InputRegister> m_InputRegisters;
+  protected Vector<Register> m_Registers;
   protected boolean m_Locked = false;
 
   /**
    * Constructs a new <tt>SimpleProcessImage</tt> instance.
    */
   public SimpleProcessImage() {
-    m_DigitalInputs = new Vector();
-    m_DigitalOutputs = new Vector();
-    m_InputRegisters = new Vector();
-    m_Registers = new Vector();
+    m_DigitalInputs = new Vector<DigitalIn>();
+    m_DigitalOutputs = new Vector<DigitalOut>();
+    m_InputRegisters = new Vector<InputRegister>();
+    m_Registers = new Vector<Register>();
   }//SimpleProcessImage
 
   public boolean isLocked() {
@@ -81,7 +84,7 @@ public class SimpleProcessImage
       throws IllegalAddressException {
 
     try {
-      return (DigitalIn) m_DigitalInputs.elementAt(ref);
+      return m_DigitalInputs.elementAt(ref);
     } catch (IndexOutOfBoundsException ex) {
       throw new IllegalAddressException();
     }
@@ -130,7 +133,7 @@ public class SimpleProcessImage
   public DigitalOut getDigitalOut(int ref)
       throws IllegalAddressException {
     try {
-      return (DigitalOut) m_DigitalOutputs.elementAt(ref);
+      return m_DigitalOutputs.elementAt(ref);
     } catch (IndexOutOfBoundsException ex) {
       throw new IllegalAddressException();
     }
@@ -180,7 +183,7 @@ public class SimpleProcessImage
       throws IllegalAddressException {
 
     try {
-      return (InputRegister) m_InputRegisters.elementAt(ref);
+      return m_InputRegisters.elementAt(ref);
     } catch (IndexOutOfBoundsException ex) {
       throw new IllegalAddressException();
     }
@@ -230,7 +233,7 @@ public class SimpleProcessImage
       throws IllegalAddressException {
 
     try {
-      return (Register) m_Registers.elementAt(ref);
+      return m_Registers.elementAt(ref);
     } catch (IndexOutOfBoundsException ex) {
       throw new IllegalAddressException();
     }
