@@ -185,17 +185,25 @@ public class ModbusTCPTransaction
       //4. Retry transaction m_Retries times, in case of
       //I/O Exception problems.
       int retryCounter = 0;
-
+      int transactionId;
       while (retryCounter < m_Retries) {
         try {
           //toggle and set the id
-          m_Request.setTransactionID(c_TransactionID.increment());
+          transactionId = c_TransactionID.increment();
+          m_Request.setTransactionID(transactionId);
+          
           //3. write request, and read response
           m_IO.writeMessage(m_Request);
+          
           //read response message
-          m_Response = m_IO.readResponse();
-          m_Response.setReference(m_Request.getReference());
-          break;
+          ModbusResponse response = m_IO.readResponse();
+          
+          //Check the transaction ID
+          if (response.getTransactionID() == transactionId) {
+        	  m_Response = response;
+        	  m_Response.setReference(m_Request.getReference());
+        	  break;
+          }
         } catch (ModbusIOException ex) {
           if (retryCounter == (m_Retries-1)) {
             throw new ModbusIOException("Executing transaction failed (tried " + m_Retries + " times)");
