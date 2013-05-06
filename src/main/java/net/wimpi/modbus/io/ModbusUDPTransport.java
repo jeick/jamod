@@ -113,4 +113,10 @@ public class ModbusUDPTransport
     }
   }//readResponse
 
+
+	@Override
+	public void flush() {
+		m_ByteIn.skip(m_ByteIn.available());
+	}
+
 }//class ModbusUDPTransport

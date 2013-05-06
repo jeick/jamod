@@ -155,6 +155,14 @@ public class ModbusTCPTransport
       throw new ModbusIOException("I/O exception - failed to read.");
     }
   }//readRequest
+  
+  public void flush() {
+	  try {
+		m_Input.skip(m_Input.available());
+	} catch (IOException e) {
+		//TODO: If flushing the buffer fails, what should we do?
+	}
+  }
 
   public ModbusResponse readResponse()
       throws ModbusIOException {

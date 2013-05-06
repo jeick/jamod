@@ -236,4 +236,13 @@ public class ModbusASCIITransport
    */
   public static final int FRAME_END = 2000;
 
+	@Override
+	public void flush() {
+		try {
+			m_InputStream.skip(m_InputStream.available());
+		} catch (IOException e) {
+			//TODO: If flushing the buffer fails, what should we do?
+		}
+	}
+
 }//class ModbusASCIITransport

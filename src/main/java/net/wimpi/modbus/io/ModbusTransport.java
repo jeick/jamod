@@ -74,4 +74,10 @@ public interface ModbusTransport {
    */
   public ModbusResponse readResponse() throws ModbusIOException;
 
+  /**
+   * Flushes any data waiting to be read from this transport.
+   * Discards any waiting data.
+   */
+  public void flush();
+
 }//class ModbusTransport

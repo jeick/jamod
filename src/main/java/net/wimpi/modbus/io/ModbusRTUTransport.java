@@ -263,5 +263,14 @@ public class ModbusRTUTransport
       throw new IOException("getResponse serial port exception");
     }
   }//getResponse
+
+	@Override
+	public void flush() {
+		try {
+			m_InputStream.skip(m_InputStream.available());
+		} catch (IOException e) {
+			//TODO: If flushing the buffer fails, what should we do?
+		}
+	}
   
 } //ModbusRTUTransport

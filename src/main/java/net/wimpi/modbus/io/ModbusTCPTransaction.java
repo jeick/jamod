@@ -193,6 +193,7 @@ public class ModbusTCPTransaction
           m_Request.setTransactionID(transactionId);
           
           //3. write request, and read response
+          m_IO.flush();
           m_IO.writeMessage(m_Request);
           
           //read response message
@@ -203,6 +204,13 @@ public class ModbusTCPTransaction
         	  m_Response = response;
         	  m_Response.setReference(m_Request.getReference());
         	  break;
+          } else {
+        	  if (retryCounter == (m_Retries-1)) {
+        		  throw new ModbusIOException("Executing transaction failed (tried " + m_Retries + " times)");
+        	  } else {
+        		  retryCounter++;
+        		  continue;
+        	  }
           }
         } catch (ModbusIOException ex) {
           if (retryCounter == (m_Retries-1)) {
