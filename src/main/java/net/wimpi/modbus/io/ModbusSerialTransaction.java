@@ -66,7 +66,7 @@ public class ModbusSerialTransaction
   /**
    * Constructs a new <tt>ModbusSerialTransaction</tt>
    * instance with a given <tt>ModbusRequest</tt> to
-   * be send when the transaction is executed.
+   * be sent when the transaction is executed.
    * <p/>
    *
    * @param request a <tt>ModbusRequest</tt> instance.
@@ -77,18 +77,17 @@ public class ModbusSerialTransaction
 
   /**
    * Constructs a new <tt>ModbusSerialTransaction</tt>
-   * instance with a given <tt>ModbusRequest</tt> to
-   * be send when the transaction is executed.
+   * instance with the given <tt>SerialConnection</tt>
    * <p/>
    *
-   * @param con a <tt>TCPMasterConnection</tt> instance.
+   * @param con a <tt>SerialConnection</tt> instance.
    */
   public ModbusSerialTransaction(SerialConnection con) {
     setSerialConnection(con);
   }//constructor
 
   /**
-   * Sets the port on which this <tt>ModbusTransaction</tt>
+   * Sets the serial connection on which this <tt>ModbusTransaction</tt>
    * should be executed.<p>
    * <p/>
    *
@@ -106,7 +105,6 @@ public class ModbusSerialTransaction
 
   public void setRequest(ModbusRequest req) {
     m_Request = req;
-    //m_Response = req.getResponse();
   }//setRequest
 
   public ModbusRequest getRequest() {
@@ -218,7 +216,7 @@ public class ModbusSerialTransaction
   }//execute
 
   /**
-   * Asserts if this <tt>ModbusTCPTransaction</tt> is
+   * Asserts if this <tt>ModbusSerialTransaction</tt> is
    * executable.
    *
    * @throws ModbusException if the transaction cannot be asserted.
