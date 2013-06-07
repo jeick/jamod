@@ -26,52 +26,51 @@ import net.wimpi.modbus.procimg.SimpleProcessImage;
 import net.wimpi.modbus.procimg.SimpleRegister;
 
 /**
- * Class implementing a simple Modbus/UDP slave.
- * A simple process image is available to test
- * functionality and behaviour of the implementation.
- *
+ * Class implementing a simple Modbus/UDP slave. A simple process image is
+ * available to test functionality and behaviour of the implementation.
+ * 
  * @author Dieter Wimberger
  * @version @version@ (@date@)
  */
 public class UDPSlaveTest {
 
-  public static void main(String[] args) {
+	public static void main(String[] args) {
 
-    ModbusUDPListener listener = null;
-    SimpleProcessImage spi = null;
-    int port = Modbus.DEFAULT_PORT;
+		ModbusUDPListener listener = null;
+		SimpleProcessImage spi = null;
+		int port = Modbus.DEFAULT_PORT;
 
-    try {
+		try {
 
-      if(args != null && args.length ==1) {
-        port = Integer.parseInt(args[0]);
-      }
+			if (args != null && args.length == 1) {
+				port = Integer.parseInt(args[0]);
+			}
 
-      System.out.println("jModbus Modbus/UDP Slave v0.1");
+			System.out.println("jModbus Modbus/UDP Slave v0.1");
 
-      //1. Prepare a process image
-      spi = new SimpleProcessImage();
-      spi.addDigitalOut(new SimpleDigitalOut(true));
-      spi.addDigitalIn(new SimpleDigitalIn(false));
-      spi.addDigitalIn(new SimpleDigitalIn(true));
-      spi.addDigitalIn(new SimpleDigitalIn(false));
-      spi.addDigitalIn(new SimpleDigitalIn(true));
-      spi.addRegister(new SimpleRegister(251));
-      spi.addInputRegister(new SimpleInputRegister(45));
-      ModbusCoupler.getReference().setProcessImage(spi);
-      ModbusCoupler.getReference().setMaster(false);
-      ModbusCoupler.getReference().setUnitID(15);
+			// 1. Prepare a process image
+			spi = new SimpleProcessImage();
+			spi.addDigitalOut(new SimpleDigitalOut(true));
+			spi.addDigitalIn(new SimpleDigitalIn(false));
+			spi.addDigitalIn(new SimpleDigitalIn(true));
+			spi.addDigitalIn(new SimpleDigitalIn(false));
+			spi.addDigitalIn(new SimpleDigitalIn(true));
+			spi.addRegister(new SimpleRegister(251));
+			spi.addInputRegister(new SimpleInputRegister(45));
+			ModbusCoupler.getReference().setProcessImage(spi);
+			ModbusCoupler.getReference().setMaster(false);
+			ModbusCoupler.getReference().setUnitID(15);
 
-      //2. Setup and start listener
-      listener = new ModbusUDPListener();
-      listener.setPort(port);
-      listener.start();
+			// 2. Setup and start listener
+			listener = new ModbusUDPListener();
+			listener.setPort(port);
+			listener.start();
 
-    } catch (Exception ex) {
-      ex.printStackTrace();
-    }
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 
-  }//main
+	}// main
 
-}//class UDPSlaveTest
+}// class UDPSlaveTest
 

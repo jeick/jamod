@@ -20,71 +20,71 @@
 package net.wimpi.modbus;
 
 /**
- * Class that implements a <tt>ModbusSlaveException</tt>.
- * Instances of this exception are thrown when
- * the slave returns a Modbus exception.
- *
+ * Class that implements a <tt>ModbusSlaveException</tt>. Instances of this
+ * exception are thrown when the slave returns a Modbus exception.
+ * 
  * @author Dieter Wimberger
  * @version @version@ (@date@)
  */
 
 @SuppressWarnings("serial")
-public class ModbusSlaveException
-    extends ModbusException {
+public class ModbusSlaveException extends ModbusException {
 
-  //instance attributes
-  private int m_Type = -1;
+	// instance attributes
+	private int m_Type = -1;
 
-  /**
-   * Constructs a new <tt>ModbusSlaveException</tt>
-   * instance with the given type.<br>
-   * Types are defined according to the protocol
-   * specification in <tt>net.wimpi.modbus.Modbus</tt>.
-   * <p>
-   * @param TYPE the type of exception that occured.
-   *
-   * @see net.wimpi.modbus.Modbus
-   */
-  public ModbusSlaveException(int TYPE) {
-    super();
-    m_Type = TYPE;
-  }//constructor
+	/**
+	 * Constructs a new <tt>ModbusSlaveException</tt> instance with the given
+	 * type.<br>
+	 * Types are defined according to the protocol specification in
+	 * <tt>net.wimpi.modbus.Modbus</tt>.
+	 * <p>
+	 * 
+	 * @param TYPE
+	 *            the type of exception that occured.
+	 * 
+	 * @see net.wimpi.modbus.Modbus
+	 */
+	public ModbusSlaveException(int TYPE) {
+		super();
+		m_Type = TYPE;
+	}// constructor
 
-  /**
-   * Returns the type of this <tt>ModbusSlaveException</tt>.
-   * <br>
-   * Types are defined according to the protocol
-   * specification in <tt>net.wimpi.modbus.Modbus</tt>.
-   * <p>
-   * @return the type of this <tt>ModbusSlaveException</tt>.
-   *
-   * @see net.wimpi.modbus.Modbus
-   */
-  public int getType() {
-    return m_Type;
-  }//getType
+	/**
+	 * Returns the type of this <tt>ModbusSlaveException</tt>. <br>
+	 * Types are defined according to the protocol specification in
+	 * <tt>net.wimpi.modbus.Modbus</tt>.
+	 * <p>
+	 * 
+	 * @return the type of this <tt>ModbusSlaveException</tt>.
+	 * 
+	 * @see net.wimpi.modbus.Modbus
+	 */
+	public int getType() {
+		return m_Type;
+	}// getType
 
-  /**
-   * Tests if this <tt>ModbusSlaveException</tt>
-   * is of a given type.
-   * <br>
-   * Types are defined according to the protocol
-   * specification in <tt>net.wimpi.modbus.Modbus</tt>.
-   * <p>
-   * @param TYPE the type to test this
-   *        <tt>ModbusSlaveException</tt> type against.
-   *
-   * @return true if this <tt>ModbusSlaveException</tt>
-   *         is of the given type, false otherwise.
-   *
-   * @see net.wimpi.modbus.Modbus
-   */
-  public boolean isType(int TYPE) {
-    return (TYPE == m_Type);
-  }//isType
+	/**
+	 * Tests if this <tt>ModbusSlaveException</tt> is of a given type. <br>
+	 * Types are defined according to the protocol specification in
+	 * <tt>net.wimpi.modbus.Modbus</tt>.
+	 * <p>
+	 * 
+	 * @param TYPE
+	 *            the type to test this <tt>ModbusSlaveException</tt> type
+	 *            against.
+	 * 
+	 * @return true if this <tt>ModbusSlaveException</tt> is of the given type,
+	 *         false otherwise.
+	 * 
+	 * @see net.wimpi.modbus.Modbus
+	 */
+	public boolean isType(int TYPE) {
+		return (TYPE == m_Type);
+	}// isType
 
-  public String getMessage() {
-    return "Error Code = " + m_Type;
-  }//getMessage
+	public String getMessage() {
+		return "Error Code = " + m_Type;
+	}// getMessage
 
-}//ModbusSlaveException
+}// ModbusSlaveException

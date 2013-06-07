@@ -17,24 +17,25 @@
 package net.wimpi.modbus.util;
 
 /**
- * A cleanroom implementation of the Observer interface
- * for the Observable design pattern.
+ * A cleanroom implementation of the Observer interface for the Observable
+ * design pattern.
  * <p/>
- *
+ * 
  * @author Dieter Wimberger (wimpi)
  * @version @version@ (@date@)
  */
 public interface Observer {
 
-  /**
-   * Updates the state of this <tt>Observer</tt> to be in
-   * synch with an <tt>Observable</tt> instance.
-   * The argument should usually be an indication of the
-   * aspects that changed in the <tt>Observable</tt>.
-   *
-   * @param o an <tt>Observable</tt> instance.
-   * @param arg an arbitrary argument to be passed.
-   */
-  public void update(Observable o, Object arg);
+	/**
+	 * Updates the state of this <tt>Observer</tt> to be in synch with an
+	 * <tt>Observable</tt> instance. The argument should usually be an
+	 * indication of the aspects that changed in the <tt>Observable</tt>.
+	 * 
+	 * @param o
+	 *            an <tt>Observable</tt> instance.
+	 * @param arg
+	 *            an arbitrary argument to be passed.
+	 */
+	public void update(Observable o, Object arg);
 
-}//interface Observer
+}// interface Observer

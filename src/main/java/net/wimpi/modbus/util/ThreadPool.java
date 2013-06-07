@@ -23,54 +23,55 @@ import java.util.ArrayList;
 
 /**
  * Class implementing a simple thread pool.
- *
+ * 
  * @author Dieter Wimberger
  * @version @version@ (@date@)
  */
 public class ThreadPool {
 
-  //instance attributes and associations
-  private LinkedQueue m_TaskPool;
-  private ArrayList<PoolThread> m_Threads;
-  private int m_Size = 1;
+	// instance attributes and associations
+	private LinkedQueue m_TaskPool;
+	private ArrayList<PoolThread> m_Threads;
+	private int m_Size = 1;
 
-  /**
-   * Constructs a new <tt>ThreadPool</tt> instance.
-   *
-   * @param size the size of the thread pool.
-   */
-  public ThreadPool(int size) {
-    m_Size = size;
-    m_TaskPool = new LinkedQueue();
-	m_Threads = new ArrayList<PoolThread>();
-    initPool();
-  }//constructor
+	/**
+	 * Constructs a new <tt>ThreadPool</tt> instance.
+	 * 
+	 * @param size
+	 *            the size of the thread pool.
+	 */
+	public ThreadPool(int size) {
+		m_Size = size;
+		m_TaskPool = new LinkedQueue();
+		m_Threads = new ArrayList<PoolThread>();
+		initPool();
+	}// constructor
 
-  /**
-   * Execute the <tt>Runnable</tt> instance
-   * through a thread in this <tt>ThreadPool</tt>.
-   *
-   * @param task the <tt>Runnable</tt> to be executed.
-   */
-  public synchronized void execute(Runnable task) {
-    try {
-      m_TaskPool.put(task);
-    } catch (InterruptedException ex) {
-      //FIXME: Handle!?
-    }
-  }//execute
+	/**
+	 * Execute the <tt>Runnable</tt> instance through a thread in this
+	 * <tt>ThreadPool</tt>.
+	 * 
+	 * @param task
+	 *            the <tt>Runnable</tt> to be executed.
+	 */
+	public synchronized void execute(Runnable task) {
+		try {
+			m_TaskPool.put(task);
+		} catch (InterruptedException ex) {
+			// FIXME: Handle!?
+		}
+	}// execute
 
-  /**
-   * Initializes the pool, populating it with
-   * n started threads.
-   */
-  protected void initPool() {
-    for (int i = m_Size; --i >= 0;) {
-		PoolThread toAdd = new PoolThread();
-		toAdd.start();
-		m_Threads.add(toAdd);
-    }
-  }//initPool
+	/**
+	 * Initializes the pool, populating it with n started threads.
+	 */
+	protected void initPool() {
+		for (int i = m_Size; --i >= 0;) {
+			PoolThread toAdd = new PoolThread();
+			toAdd.start();
+			m_Threads.add(toAdd);
+		}
+	}// initPool
 
 	/**
 	 * Stops the pool, cleaning up the threads
@@ -82,51 +83,52 @@ public class ThreadPool {
 		}
 	}
 
-  /**
-   * Inner class implementing a thread that can be
-   * run in a <tt>ThreadPool</tt>.
-   *
-   * @author Dieter Wimberger
-   * @version @version@ (@date@)
-   */
-  private class PoolThread extends Thread {
-	private Boolean keepRunning = new Boolean(false);
-	private Runnable task;
-	private Object taskLock = new Object();
+	/**
+	 * Inner class implementing a thread that can be run in a
+	 * <tt>ThreadPool</tt>.
+	 * 
+	 * @author Dieter Wimberger
+	 * @version @version@ (@date@)
+	 */
+	private class PoolThread extends Thread {
+		private Boolean keepRunning = new Boolean(false);
+		private Runnable task;
+		private Object taskLock = new Object();
 
-    /**
-     * Runs the <tt>PoolThread</tt>.
-     * <p>
-     * This method will infinitely loop, picking
-     * up available tasks from the <tt>LinkedQueue</tt>.
-     */
-	public void run() {
-		//System.out.println("Running PoolThread");
-		setRunning(true);
-		do {
-			try {
-				synchronized(taskLock) {
-					task = (Runnable)m_TaskPool.take();
-					task.run();
+		/**
+		 * Runs the <tt>PoolThread</tt>.
+		 * <p>
+		 * This method will infinitely loop, picking up available tasks from the
+		 * <tt>LinkedQueue</tt>.
+		 */
+		public void run() {
+			// System.out.println("Running PoolThread");
+			setRunning(true);
+			do {
+				try {
+					synchronized (taskLock) {
+						task = (Runnable) m_TaskPool.take();
+						task.run();
+					}
+				} catch (Exception e) {
+					// Ignore, we were likely just interrupted. Recheck if we
+					// should be running or not.
+					continue;
 				}
-			} catch (Exception e) {
-				//Ignore, we were likely just interrupted.  Recheck if we should be running or not.
-				continue;
-			}
-		} while (isRunning());
-	}
-	
-	void setRunning(boolean run) {
-		synchronized (keepRunning){
-			keepRunning = run;
+			} while (isRunning());
 		}
-	}
-	
-	boolean isRunning() {
-		synchronized (keepRunning) {
-			return keepRunning;
-		}
-	}
-  }//PoolThread
 
-}//ThreadPool
+		void setRunning(boolean run) {
+			synchronized (keepRunning) {
+				keepRunning = run;
+			}
+		}
+
+		boolean isRunning() {
+			synchronized (keepRunning) {
+				return keepRunning;
+			}
+		}
+	}// PoolThread
+
+}// ThreadPool

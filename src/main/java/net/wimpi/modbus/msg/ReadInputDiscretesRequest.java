@@ -30,165 +30,160 @@ import net.wimpi.modbus.procimg.IllegalAddressException;
 import net.wimpi.modbus.procimg.ProcessImage;
 
 /**
- * Class implementing a <tt>ReadInputDiscretesRequest</tt>.
- * The implementation directly correlates with the class 1
- * function <i>read input discretes (FC 2)</i>. It encapsulates
- * the corresponding request message.
+ * Class implementing a <tt>ReadInputDiscretesRequest</tt>. The implementation
+ * directly correlates with the class 1 function <i>read input discretes (FC
+ * 2)</i>. It encapsulates the corresponding request message.
  * <p>
- * Input Discretes are understood as bits that cannot be
- * manipulated (i.e. set or unset).
- *
+ * Input Discretes are understood as bits that cannot be manipulated (i.e. set
+ * or unset).
+ * 
  * @author Dieter Wimberger
  * @version @version@ (@date@)
  */
-public final class ReadInputDiscretesRequest
-    extends ModbusRequest {
+public final class ReadInputDiscretesRequest extends ModbusRequest {
 
-  //instance attributes
-  private int m_Reference;
-  private int m_BitCount;
+	// instance attributes
+	private int m_Reference;
+	private int m_BitCount;
 
-  /**
-   * Constructs a new <tt>ReadInputDiscretesRequest</tt>
-   * instance.
-   */
-  public ReadInputDiscretesRequest() {
-    super();
-    setFunctionCode(Modbus.READ_INPUT_DISCRETES);
-    //4 bytes (unit id and function code is excluded)
-    setDataLength(4);
-  }//constructor
+	/**
+	 * Constructs a new <tt>ReadInputDiscretesRequest</tt> instance.
+	 */
+	public ReadInputDiscretesRequest() {
+		super();
+		setFunctionCode(Modbus.READ_INPUT_DISCRETES);
+		// 4 bytes (unit id and function code is excluded)
+		setDataLength(4);
+	}// constructor
 
-  /**
-   * Constructs a new <tt>ReadInputDiscretesRequest</tt>
-   * instance with a given reference and count of input
-   * discretes (i.e. bits) to be read.
-   * <p>
-   * @param ref the reference number of the register
-   *        to read from.
-   * @param count the number of bits to be read.
-   */
-  public ReadInputDiscretesRequest(int ref, int count) {
-    super();
-    setFunctionCode(Modbus.READ_INPUT_DISCRETES);
-    //4 bytes (unit id and function code is excluded)
-    setDataLength(4);
-    setReference(ref);
-    setBitCount(count);
-  }//constructor
+	/**
+	 * Constructs a new <tt>ReadInputDiscretesRequest</tt> instance with a given
+	 * reference and count of input discretes (i.e. bits) to be read.
+	 * <p>
+	 * 
+	 * @param ref
+	 *            the reference number of the register to read from.
+	 * @param count
+	 *            the number of bits to be read.
+	 */
+	public ReadInputDiscretesRequest(int ref, int count) {
+		super();
+		setFunctionCode(Modbus.READ_INPUT_DISCRETES);
+		// 4 bytes (unit id and function code is excluded)
+		setDataLength(4);
+		setReference(ref);
+		setBitCount(count);
+	}// constructor
 
-  /*
-  public ModbusResponse getResponse() {
-    ReadInputDiscretesResponse response =
-        new ReadInputDiscretesResponse(getBitCount());
-    response.setHeadless(isHeadless());
-    return response;
-  }//getResponse
-  */
+	/*
+	 * public ModbusResponse getResponse() { ReadInputDiscretesResponse response
+	 * = new ReadInputDiscretesResponse(getBitCount());
+	 * response.setHeadless(isHeadless()); return response; }//getResponse
+	 */
 
-  public ModbusResponse createResponse() {
-    ReadInputDiscretesResponse response = null;
-    DigitalIn[] dins = null;
+	public ModbusResponse createResponse() {
+		ReadInputDiscretesResponse response = null;
+		DigitalIn[] dins = null;
 
-    //1. get process image
-    ProcessImage procimg = ModbusCoupler.getReference().getProcessImage();
-    //2. get inputdiscretes range
-    try {
-      dins = procimg.getDigitalInRange(this.getReference(), this.getBitCount());
-    } catch (IllegalAddressException iaex) {
-      return createExceptionResponse(Modbus.ILLEGAL_ADDRESS_EXCEPTION);
-    }
-    response = new ReadInputDiscretesResponse(dins.length);
-    //transfer header data
-    if (!isHeadless()) {
-      response.setTransactionID(this.getTransactionID());
-      response.setProtocolID(this.getProtocolID());
-    } else {
-      response.setHeadless();
-    }
-    response.setUnitID(this.getUnitID());
-    response.setFunctionCode(this.getFunctionCode());
-    response.setReference(m_Reference);
+		// 1. get process image
+		ProcessImage procimg = ModbusCoupler.getReference().getProcessImage();
+		// 2. get inputdiscretes range
+		try {
+			dins = procimg.getDigitalInRange(this.getReference(),
+					this.getBitCount());
+		} catch (IllegalAddressException iaex) {
+			return createExceptionResponse(Modbus.ILLEGAL_ADDRESS_EXCEPTION);
+		}
+		response = new ReadInputDiscretesResponse(dins.length);
+		// transfer header data
+		if (!isHeadless()) {
+			response.setTransactionID(this.getTransactionID());
+			response.setProtocolID(this.getProtocolID());
+		} else {
+			response.setHeadless();
+		}
+		response.setUnitID(this.getUnitID());
+		response.setFunctionCode(this.getFunctionCode());
+		response.setReference(m_Reference);
 
-    for (int i = 0; i < dins.length; i++) {
-      response.setDiscreteStatus(i, dins[i].isSet());
-    }
-    return response;
-  }//createResponse
+		for (int i = 0; i < dins.length; i++) {
+			response.setDiscreteStatus(i, dins[i].isSet());
+		}
+		return response;
+	}// createResponse
 
+	/**
+	 * Sets the reference of the register to start reading from with this
+	 * <tt>ReadInputDiscretesRequest</tt>.
+	 * <p>
+	 * 
+	 * @param ref
+	 *            the reference of the register to start reading from.
+	 */
+	public void setReference(int ref) {
+		m_Reference = ref;
+		// setChanged(true);
+	}// setReference
 
-  /**
-   * Sets the reference of the register to start reading
-   * from with this <tt>ReadInputDiscretesRequest</tt>.
-   * <p>
-   * @param ref the reference of the register
-   *        to start reading from.
-   */
-  public void setReference(int ref) {
-    m_Reference = ref;
-    //setChanged(true);
-  }//setReference
+	/**
+	 * Returns the reference of the register to to start reading from with this
+	 * <tt>ReadInputDiscretesRequest</tt>.
+	 * <p>
+	 * 
+	 * @return the reference of the register to start reading from as
+	 *         <tt>int</tt>.
+	 */
+	public int getReference() {
+		return m_Reference;
+	}// getReference
 
-  /**
-   * Returns the reference of the register to to start
-   * reading from with this
-   * <tt>ReadInputDiscretesRequest</tt>.
-   * <p>
-   * @return the reference of the register
-   *        to start reading from as <tt>int</tt>.
-   */
-  public int getReference() {
-    return m_Reference;
-  }//getReference
+	/**
+	 * Sets the number of bits (i.e. input discretes) to be read with this
+	 * <tt>ReadInputDiscretesRequest</tt>.
+	 * <p>
+	 * 
+	 * @param count
+	 *            the number of bits to be read.
+	 */
+	public void setBitCount(int count) {
+		// assert <=2000
+		m_BitCount = count;
+		// setChanged(true);
+	}// setBitCount
 
-  /**
-   * Sets the number of bits (i.e. input discretes) to be
-   * read with this <tt>ReadInputDiscretesRequest</tt>.
-   * <p>
-   * @param count the number of bits to be read.
-   */
-  public void setBitCount(int count) {
-    //assert <=2000
-    m_BitCount = count;
-    //setChanged(true);
-  }//setBitCount
+	/**
+	 * Returns the number of bits (i.e. input discretes) to be read with this
+	 * <tt>ReadInputDiscretesRequest</tt>.
+	 * <p>
+	 * 
+	 * @return the number of bits to be read.
+	 */
+	public int getBitCount() {
+		return m_BitCount;
+	}// getBitCount
 
-  /**
-   * Returns the number of bits (i.e. input discretes)
-   * to be read with this
-   * <tt>ReadInputDiscretesRequest</tt>.
-   * <p>
-   * @return the number of bits to be read.
-   */
-  public int getBitCount() {
-    return m_BitCount;
-  }//getBitCount
+	public void writeData(DataOutput dout) throws IOException {
+		dout.writeShort(m_Reference);
+		dout.writeShort(m_BitCount);
+	}// writeData
 
-  public void writeData(DataOutput dout)
-      throws IOException {
-    dout.writeShort(m_Reference);
-    dout.writeShort(m_BitCount);
-  }//writeData
+	public void readData(DataInput din) throws IOException {
+		m_Reference = din.readUnsignedShort();
+		m_BitCount = din.readUnsignedShort();
+	}// readData
 
-  public void readData(DataInput din)
-      throws IOException {
-    m_Reference = din.readUnsignedShort();
-    m_BitCount = din.readUnsignedShort();
-  }//readData
-  
-  public String toString() {
-	  return "ReadInputDiscretesRequest - Ref: "+m_Reference+" Count: "+m_BitCount;
-  }
+	public String toString() {
+		return "ReadInputDiscretesRequest - Ref: " + m_Reference + " Count: "
+				+ m_BitCount;
+	}
 
-/*
-  protected void assembleData() throws IOException {
-    m_DataOut.writeShort(m_Reference);
-    m_DataOut.writeShort(m_BitCount);
-  }//assembleData
-
-  public void readData(DataInputStream in) throws IOException, EOFException {
-    m_Reference = in.readUnsignedShort();
-    m_BitCount = in.readUnsignedShort();
-  }//readData
-*/
-}//class ReadInputDiscretesRequest
+	/*
+	 * protected void assembleData() throws IOException {
+	 * m_DataOut.writeShort(m_Reference); m_DataOut.writeShort(m_BitCount);
+	 * }//assembleData
+	 * 
+	 * public void readData(DataInputStream in) throws IOException, EOFException
+	 * { m_Reference = in.readUnsignedShort(); m_BitCount =
+	 * in.readUnsignedShort(); }//readData
+	 */
+}// class ReadInputDiscretesRequest

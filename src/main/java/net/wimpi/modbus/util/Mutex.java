@@ -17,26 +17,24 @@
 package net.wimpi.modbus.util;
 
 /**
- * A simple non-reentrant mutual exclusion lock.
- * The lock is free upon construction. Each acquire gets the
- * lock, and each release frees it. Releasing a lock that
- * is already free has no effect.
+ * A simple non-reentrant mutual exclusion lock. The lock is free upon
+ * construction. Each acquire gets the lock, and each release frees it.
+ * Releasing a lock that is already free has no effect.
  * <p/>
- * This implementation makes no attempt to provide any fairness
- * or ordering guarantees. If you need them, consider using one of
- * the Semaphore implementations as a locking mechanism.
+ * This implementation makes no attempt to provide any fairness or ordering
+ * guarantees. If you need them, consider using one of the Semaphore
+ * implementations as a locking mechanism.
  * <p/>
  * <b>Sample usage</b><br>
  * <p/>
- * Mutex can be useful in constructions that cannot be
- * expressed using java synchronized blocks because the
- * acquire/release pairs do not occur in the same method or
- * code block. For example, you can use them for hand-over-hand
- * locking across the nodes of a linked list. This allows
- * extremely fine-grained locking,  and so increases
- * potential concurrency, at the cost of additional complexity and
- * overhead that would normally make this worthwhile only in cases of
- * extreme contention.
+ * Mutex can be useful in constructions that cannot be expressed using java
+ * synchronized blocks because the acquire/release pairs do not occur in the
+ * same method or code block. For example, you can use them for hand-over-hand
+ * locking across the nodes of a linked list. This allows extremely fine-grained
+ * locking, and so increases potential concurrency, at the cost of additional
+ * complexity and overhead that would normally make this worthwhile only in
+ * cases of extreme contention.
+ * 
  * <pre>
  * class Node {
  *   Object item;
@@ -109,58 +107,62 @@ package net.wimpi.modbus.util;
  */
 public class Mutex {
 
-  /**
-   * The lock status
-   */
-  protected boolean inuse_ = false;
+	/**
+	 * The lock status
+	 */
+	protected boolean inuse_ = false;
 
-  public void acquire() throws InterruptedException {
-    if (Thread.interrupted()) throw new InterruptedException();
-    synchronized (this) {
-      try {
-        while (inuse_) wait();
-        inuse_ = true;
-      } catch (InterruptedException ex) {
-        notify();
-        throw ex;
-      }
-    }
-  }//accquire
+	public void acquire() throws InterruptedException {
+		if (Thread.interrupted())
+			throw new InterruptedException();
+		synchronized (this) {
+			try {
+				while (inuse_)
+					wait();
+				inuse_ = true;
+			} catch (InterruptedException ex) {
+				notify();
+				throw ex;
+			}
+		}
+	}// accquire
 
-  public synchronized void release() {
-    inuse_ = false;
-    notify();
-  }//release
+	public synchronized void release() {
+		inuse_ = false;
+		notify();
+	}// release
 
-  public boolean attempt(long msecs) throws InterruptedException {
-    if (Thread.interrupted()) throw new InterruptedException();
-    synchronized (this) {
-      if (!inuse_) {
-        inuse_ = true;
-        return true;
-      } else if (msecs <= 0)
-        return false;
-      else {
-        long waitTime = msecs;
-        long start = System.currentTimeMillis();
-        try {
-          for (; ;) {
-            wait(waitTime);
-            if (!inuse_) {
-              inuse_ = true;
-              return true;
-            } else {
-              waitTime = msecs - (System.currentTimeMillis() - start);
-              if (waitTime <= 0)
-                return false;
-            }
-          }
-        } catch (InterruptedException ex) {
-          notify();
-          throw ex;
-        }
-      }
-    }
-  }//attempt
+	public boolean attempt(long msecs) throws InterruptedException {
+		if (Thread.interrupted())
+			throw new InterruptedException();
+		synchronized (this) {
+			if (!inuse_) {
+				inuse_ = true;
+				return true;
+			} else if (msecs <= 0)
+				return false;
+			else {
+				long waitTime = msecs;
+				long start = System.currentTimeMillis();
+				try {
+					for (;;) {
+						wait(waitTime);
+						if (!inuse_) {
+							inuse_ = true;
+							return true;
+						} else {
+							waitTime = msecs
+									- (System.currentTimeMillis() - start);
+							if (waitTime <= 0)
+								return false;
+						}
+					}
+				} catch (InterruptedException ex) {
+					notify();
+					throw ex;
+				}
+			}
+		}
+	}// attempt
 
-}//class Mutex
+}// class Mutex

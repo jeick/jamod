@@ -19,21 +19,20 @@ package net.wimpi.modbus.procimg;
 /**
  * Interface defining a digital input.
  * <p>
- * In Modbus terms this represents an
- * input discrete, it is read only from
- * the slave side.
- *
+ * In Modbus terms this represents an input discrete, it is read only from the
+ * slave side.
+ * 
  * @author Dieter Wimberger
  * @version @version@ (@date@)
  */
 public interface DigitalIn {
 
-  /**
-   * Tests if this <tt>DigitalIn</tt> is set.
-   * <p>
-   *
-   * @return true if set, false otherwise.
-   */
-  public boolean isSet();
-  
-}//DigitalIn
+	/**
+	 * Tests if this <tt>DigitalIn</tt> is set.
+	 * <p>
+	 * 
+	 * @return true if set, false otherwise.
+	 */
+	public boolean isSet();
+
+}// DigitalIn

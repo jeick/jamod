@@ -26,84 +26,81 @@ import java.io.DataOutput;
 import java.io.IOException;
 
 /**
- * Class implementing a <tt>WriteMultipleCoilsResponse</tt>.
- * The implementation directly correlates with the class 1
- * function <i>read coils (FC 15)</i>. It encapsulates
- * the corresponding response message.
+ * Class implementing a <tt>WriteMultipleCoilsResponse</tt>. The implementation
+ * directly correlates with the class 1 function <i>read coils (FC 15)</i>. It
+ * encapsulates the corresponding response message.
  * <p>
- * Coils are understood as bits that can be manipulated
- * (i.e. set or unset).
- *
+ * Coils are understood as bits that can be manipulated (i.e. set or unset).
+ * 
  * @author Dieter Wimberger
  * @version @version@ (@date@)
  */
-public final class WriteMultipleCoilsResponse
-    extends ModbusResponse {
+public final class WriteMultipleCoilsResponse extends ModbusResponse {
 
-  //instance attributes
-  private int m_BitCount;
+	// instance attributes
+	private int m_BitCount;
 
-  /**
-   * Constructs a new <tt>WriteMultipleCoilsResponse</tt>
-   * instance.
-   */
-  public WriteMultipleCoilsResponse() {
-    super();
-    setFunctionCode(Modbus.WRITE_MULTIPLE_COILS);
-    setDataLength(4);
-  }//constructor(int)
+	/**
+	 * Constructs a new <tt>WriteMultipleCoilsResponse</tt> instance.
+	 */
+	public WriteMultipleCoilsResponse() {
+		super();
+		setFunctionCode(Modbus.WRITE_MULTIPLE_COILS);
+		setDataLength(4);
+	}// constructor(int)
 
-  /**
-   * Constructs a new <tt>WriteMultipleCoilsResponse</tt>
-   * instance with a given count of coils (i.e. bits).
-   * <b>
-   * @param ref the offset to begin writing from.
-   * @param count the number of bits to be read.
-   */
-  public WriteMultipleCoilsResponse(int ref,int count) {
-    super();
-    setFunctionCode(Modbus.WRITE_MULTIPLE_COILS);
-    setDataLength(4);
-    setReference(ref);
-    m_BitCount = count;
-  }//constructor(int)
+	/**
+	 * Constructs a new <tt>WriteMultipleCoilsResponse</tt> instance with a
+	 * given count of coils (i.e. bits). <b>
+	 * 
+	 * @param ref
+	 *            the offset to begin writing from.
+	 * @param count
+	 *            the number of bits to be read.
+	 */
+	public WriteMultipleCoilsResponse(int ref, int count) {
+		super();
+		setFunctionCode(Modbus.WRITE_MULTIPLE_COILS);
+		setDataLength(4);
+		setReference(ref);
+		m_BitCount = count;
+	}// constructor(int)
 
-  /**
-   * Returns the number of bits (i.e. coils)
-   * read with the request.
-   * <p>
-   * @return the number of bits that have been read.
-   */
-  public int getBitCount() {
-    return m_BitCount;
-  }//getBitCount
+	/**
+	 * Returns the number of bits (i.e. coils) read with the request.
+	 * <p>
+	 * 
+	 * @return the number of bits that have been read.
+	 */
+	public int getBitCount() {
+		return m_BitCount;
+	}// getBitCount
 
-  /**
-   * Sets the number of bits (i.e. coils)
-   * that will be in a response.
-   *
-   * @param count the number of bits in the response.
-   */
-  public void setBitCount(int count) {
-    m_BitCount = count;
-  }//setBitCount
+	/**
+	 * Sets the number of bits (i.e. coils) that will be in a response.
+	 * 
+	 * @param count
+	 *            the number of bits in the response.
+	 */
+	public void setBitCount(int count) {
+		m_BitCount = count;
+	}// setBitCount
 
-  public void writeData(DataOutput dout)
-      throws IOException {
+	public void writeData(DataOutput dout) throws IOException {
 
-    dout.writeShort(getReference());
-    dout.writeShort(m_BitCount);
-  }//writeData
+		dout.writeShort(getReference());
+		dout.writeShort(m_BitCount);
+	}// writeData
 
-  public void readData(DataInput din)
-      throws IOException {
+	public void readData(DataInput din) throws IOException {
 
-    setReference(din.readUnsignedShort());
-    m_BitCount = din.readUnsignedShort();
-  }//readData
-  
-  public String toString() {
-	  return "WriteMultpleCoilsResponse - Ref: "+getReference()+" Coils: "+m_BitCount;
-  }
+		setReference(din.readUnsignedShort());
+		m_BitCount = din.readUnsignedShort();
+	}// readData
 
-}//class ReadCoilsResponse
+	public String toString() {
+		return "WriteMultpleCoilsResponse - Ref: " + getReference()
+				+ " Coils: " + m_BitCount;
+	}
+
+}// class ReadCoilsResponse

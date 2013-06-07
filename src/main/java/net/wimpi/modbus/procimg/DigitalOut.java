@@ -19,31 +19,30 @@ package net.wimpi.modbus.procimg;
 /**
  * Interface defining a digital output.
  * <p>
- * In Modbus terms this represents a
- * coil, which is read-write from slave and
+ * In Modbus terms this represents a coil, which is read-write from slave and
  * master or device side.<br>
- * Therefor implementations have to be carefully
- * designed for concurrency.
- *
+ * Therefor implementations have to be carefully designed for concurrency.
+ * 
  * @author Dieter Wimberger
  * @version @version@ (@date@)
  */
 public interface DigitalOut {
 
-  /**
-   * Tests if this <tt>DigitalOut</tt> is set.
-   * <p>
-   *
-   * @return true if set, false otherwise.
-   */
-  public boolean isSet();
+	/**
+	 * Tests if this <tt>DigitalOut</tt> is set.
+	 * <p>
+	 * 
+	 * @return true if set, false otherwise.
+	 */
+	public boolean isSet();
 
-  /**
-   * Sets the state of this <tt>DigitalOut</tt>.
-   * <p>
-   *
-   * @param b true if to be set, false otherwise.
-   */
-  public void set(boolean b);
+	/**
+	 * Sets the state of this <tt>DigitalOut</tt>.
+	 * <p>
+	 * 
+	 * @param b
+	 *            true if to be set, false otherwise.
+	 */
+	public void set(boolean b);
 
-}//DigitalOut
+}// DigitalOut

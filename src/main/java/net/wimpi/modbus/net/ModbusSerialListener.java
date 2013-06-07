@@ -26,103 +26,103 @@ import net.wimpi.modbus.util.SerialParameters;
 
 /**
  * Class that implements a ModbusTCPListener.<br>
- * If listening, it accepts incoming requests
- * passing them on to be handled.
- *
+ * If listening, it accepts incoming requests passing them on to be handled.
+ * 
  * @author Dieter Wimberger
  * @version @version@ (@date@)
  */
-public class ModbusSerialListener
-    implements Runnable {
+public class ModbusSerialListener implements Runnable {
 
-  //Members
-  private boolean m_Listening;
-  private SerialConnection m_SerialCon;
-  private Thread m_Listener;
+	// Members
+	private boolean m_Listening;
+	private SerialConnection m_SerialCon;
+	private Thread m_Listener;
 
-  /**
-   * Constructs a new <tt>ModbusSerialListener</tt> instance.
-   *
-   * @param params a <tt>SerialParameters</tt> instance.
-   */
-  public ModbusSerialListener(SerialParameters params) {
-    m_SerialCon = new SerialConnection(params);
-  }//constructor
+	/**
+	 * Constructs a new <tt>ModbusSerialListener</tt> instance.
+	 * 
+	 * @param params
+	 *            a <tt>SerialParameters</tt> instance.
+	 */
+	public ModbusSerialListener(SerialParameters params) {
+		m_SerialCon = new SerialConnection(params);
+	}// constructor
 
-  /**
-   * Starts this <tt>ModbusTCPListener</tt>.
-   */
-  public void start() {
-    m_Listener = new Thread(this);
-    m_Listener.start();
-    m_Listening = true;
-  }//start
+	/**
+	 * Starts this <tt>ModbusTCPListener</tt>.
+	 */
+	public void start() {
+		m_Listener = new Thread(this);
+		m_Listener.start();
+		m_Listening = true;
+	}// start
 
-  /**
-   * Stops this <tt>ModbusTCPListener</tt>.
-   */
-  public void stop() {
-    m_Listening = false;
-    try {
-      m_Listener.join();
-    } catch (Exception ex) {
-      //
-    }
-  }//stop
+	/**
+	 * Stops this <tt>ModbusTCPListener</tt>.
+	 */
+	public void stop() {
+		m_Listening = false;
+		try {
+			m_Listener.join();
+		} catch (Exception ex) {
+			//
+		}
+	}// stop
 
-  /**
-   * Runs this <tt>ModbusSerialListener</tt>.
-   * Listen to incoming messages.
-   */
-  public void run() {
-    try {
-      m_Listening = true;
-      m_SerialCon.open();
-      //System.out.println("Opened Serial connection.");
-      ModbusTransport transport = m_SerialCon.getModbusTransport();
-      do {
-        try {
-          //1. read the request
-          ModbusRequest request = transport.readRequest();
-          ModbusResponse response = null;
+	/**
+	 * Runs this <tt>ModbusSerialListener</tt>. Listen to incoming messages.
+	 */
+	public void run() {
+		try {
+			m_Listening = true;
+			m_SerialCon.open();
+			// System.out.println("Opened Serial connection.");
+			ModbusTransport transport = m_SerialCon.getModbusTransport();
+			do {
+				try {
+					// 1. read the request
+					ModbusRequest request = transport.readRequest();
+					ModbusResponse response = null;
 
-          //test if Process image exists
-          if (ModbusCoupler.getReference().getProcessImage() == null) {
-            response =
-                request.createExceptionResponse(Modbus.ILLEGAL_FUNCTION_EXCEPTION);
-          } else {
-            response = request.createResponse();
-          }
+					// test if Process image exists
+					if (ModbusCoupler.getReference().getProcessImage() == null) {
+						response = request
+								.createExceptionResponse(Modbus.ILLEGAL_FUNCTION_EXCEPTION);
+					} else {
+						response = request.createResponse();
+					}
 
-          if (Modbus.debug)
-            System.out.println("Request:" + request.getHexMessage());
-          if (Modbus.debug)
-            System.out.println("Response:" + response.getHexMessage());
+					if (Modbus.debug)
+						System.out
+								.println("Request:" + request.getHexMessage());
+					if (Modbus.debug)
+						System.out.println("Response:"
+								+ response.getHexMessage());
 
-          transport.writeMessage(response);
+					transport.writeMessage(response);
 
-        } catch (ModbusIOException ex) {
-          ex.printStackTrace();
-          continue;
-        }
-      } while (m_Listening);
+				} catch (ModbusIOException ex) {
+					ex.printStackTrace();
+					continue;
+				}
+			} while (m_Listening);
 
-    } catch (Exception e) {
-      //FIXME: this is a major failure, how do we handle this
-      e.printStackTrace();
-    }
-  }//listen
+		} catch (Exception e) {
+			// FIXME: this is a major failure, how do we handle this
+			e.printStackTrace();
+		}
+	}// listen
 
-  /**
-   * Tests if this <tt>ModbusTCPListener</tt> is listening
-   * and accepting incoming connections.
-   *
-   * @return true if listening (and accepting incoming connections),
-   *         false otherwise.
-   */
-  public boolean isListening() {
-    return m_Listening;
-  }//isListening
+	/**
+	 * Tests if this <tt>ModbusTCPListener</tt> is listening and accepting
+	 * incoming connections.
+	 * 
+	 * @return true if listening (and accepting incoming connections), false
+	 *         otherwise.
+	 */
+	public boolean isListening() {
+		return m_Listening;
+	}// isListening
 
-}//class ModbusSerialListener
+}// class ModbusSerialListener
 
