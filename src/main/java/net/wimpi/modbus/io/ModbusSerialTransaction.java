@@ -34,6 +34,7 @@ import net.wimpi.modbus.util.Mutex;
  * Class implementing the <tt>ModbusTransaction</tt> interface.
  * 
  * @author Dieter Wimberger
+ * @author Charles Hache
  * @version @version@ (@date@)
  */
 public class ModbusSerialTransaction implements ModbusTransaction {

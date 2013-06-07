@@ -24,8 +24,9 @@ import net.wimpi.modbus.msg.ModbusResponse;
 import net.wimpi.modbus.util.ModbusUtil;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+
+import jssc.SerialInputStream;
+import jssc.SerialOutputStream;
 
 /**
  * Class that implements the ModbusRTU transport flavor.
@@ -37,8 +38,8 @@ import java.io.OutputStream;
  */
 public class ModbusRTUTransport extends ModbusSerialTransport {
 
-	private InputStream m_InputStream; // wrap into filter input
-	private OutputStream m_OutputStream; // wrap into filter output
+	private SerialInputStream m_InputStream; // wrap into filter input
+	private SerialOutputStream m_OutputStream; // wrap into filter output
 
 	private byte[] m_InBuffer;
 	private BytesInputStream m_ByteIn; // to read message from
@@ -192,9 +193,8 @@ public class ModbusRTUTransport extends ModbusSerialTransport {
 	 * @throws IOException
 	 *             if an I\O error occurs.
 	 */
-	public void prepareStreams(InputStream in, OutputStream out)
-			throws IOException {
-		m_InputStream = in; // new RTUInputStream(in);
+	public void prepareStreams(SerialInputStream in, SerialOutputStream out) {
+		m_InputStream = in;
 		m_OutputStream = out;
 
 		m_ByteOut = new BytesOutputStream(Modbus.MAX_MESSAGE_LENGTH);
@@ -228,10 +228,8 @@ public class ModbusRTUTransport extends ModbusSerialTransport {
 				bc = m_InputStream.read();
 				out.write(bc);
 				// now get the specified number of bytes and the 2 CRC bytes
-				setReceiveThreshold(bc + 2);
-				inpBytes = m_InputStream.read(inpBuf, 0, bc + 2);
+				inpBytes = m_InputStream.blockingRead(inpBuf, 0, bc + 2);
 				out.write(inpBuf, 0, inpBytes);
-				m_CommPort.disableReceiveThreshold();
 				if (inpBytes != bc + 2) {
 					System.out.println("Error: looking for " + (bc + 2)
 							+ " bytes, received " + inpBytes);
@@ -244,26 +242,20 @@ public class ModbusRTUTransport extends ModbusSerialTransport {
 			case 0x10:
 				// read status: only the CRC remains after address and function
 				// code
-				setReceiveThreshold(6);
-				inpBytes = m_InputStream.read(inpBuf, 0, 6);
+				inpBytes = m_InputStream.blockingRead(inpBuf, 0, 6);
 				out.write(inpBuf, 0, inpBytes);
-				m_CommPort.disableReceiveThreshold();
 				break;
 			case 0x07:
 			case 0x08:
 				// read status: only the CRC remains after address and function
 				// code
-				setReceiveThreshold(3);
-				inpBytes = m_InputStream.read(inpBuf, 0, 3);
+				inpBytes = m_InputStream.blockingRead(inpBuf, 0, 3);
 				out.write(inpBuf, 0, inpBytes);
-				m_CommPort.disableReceiveThreshold();
 				break;
 			case 0x16:
 				// eight bytes in addition to the address and function codes
-				setReceiveThreshold(8);
-				inpBytes = m_InputStream.read(inpBuf, 0, 8);
+				inpBytes = m_InputStream.blockingRead(inpBuf, 0, 8);
 				out.write(inpBuf, 0, inpBytes);
-				m_CommPort.disableReceiveThreshold();
 				break;
 			case 0x18:
 				// read the byte count word
@@ -273,14 +265,11 @@ public class ModbusRTUTransport extends ModbusSerialTransport {
 				out.write(bc2);
 				bcw = ModbusUtil.makeWord(bc, bc2);
 				// now get the specified number of bytes and the 2 CRC bytes
-				setReceiveThreshold(bcw + 2);
-				inpBytes = m_InputStream.read(inpBuf, 0, bcw + 2);
+				inpBytes = m_InputStream.blockingRead(inpBuf, 0, bcw + 2);
 				out.write(inpBuf, 0, inpBytes);
-				m_CommPort.disableReceiveThreshold();
 				break;
 			}
 		} catch (IOException e) {
-			m_CommPort.disableReceiveThreshold();
 			throw new IOException("getResponse serial port exception");
 		}
 	}// getResponse

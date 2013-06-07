@@ -27,36 +27,25 @@ import net.wimpi.modbus.msg.ModbusResponse;
 import net.wimpi.modbus.util.ModbusUtil;
 
 import java.io.IOException;
-import gnu.io.CommPort;
-import java.io.InputStream;
-import java.io.OutputStream;
-import gnu.io.UnsupportedCommOperationException;
+
+import jssc.SerialInputStream;
+import jssc.SerialOutputStream;
+import jssc.SerialPort;
 
 /**
  * Abstract base class for serial <tt>ModbusTransport</tt> implementations.
  * 
  * @author Dieter Wimberger
  * @author John Charlton
+ * @author Charles Hache
  * 
  * @version @version@ (@date@)
  */
 abstract public class ModbusSerialTransport implements ModbusTransport {
-	protected CommPort m_CommPort;
+	protected SerialPort m_SerialPort;
 	protected boolean m_Echo = false; // require RS-485 echo processing
-
-	/**
-	 * <code>prepareStreams</code> prepares the input and output streams of this
-	 * <tt>ModbusSerialTransport</tt> instance.
-	 * 
-	 * @param in
-	 *            the input stream to be read from.
-	 * @param out
-	 *            the output stream to write to.
-	 * @throws IOException
-	 *             if an I\O error occurs.
-	 */
-	abstract public void prepareStreams(InputStream in, OutputStream out)
-			throws IOException;
+	protected SerialInputStream inputStream;
+	protected SerialOutputStream outputStream;
 
 	/**
 	 * <code>readResponse</code> reads a response message from the slave
@@ -98,21 +87,33 @@ abstract public class ModbusSerialTransport implements ModbusTransport {
 	 *                if an error occurs
 	 */
 	abstract public void close() throws IOException;
+	
+	/**
+	* <code>prepareStreams</code> prepares the input and output streams of this
+	* <tt>ModbusSerialTransport</tt> instance.
+	* 
+	* @param in
+	*            the input stream to be read from.
+	* @param out
+	*            the output stream to write to.
+	* @throws IOException
+	*             if an I\O error occurs.
+	*/
+	abstract public void prepareStreams(SerialInputStream in, SerialOutputStream out)
+			throws IOException;
 
 	/**
-	 * <code>setCommPort</code> sets the comm port member and prepares the input
-	 * and output streams to be used for reading from and writing to.
+	 * <code>setSerialPort</code> sets the serial port member.
 	 * 
-	 * @param cp
-	 *            the comm port to read from/write to.
-	 * @throws IOException
-	 *             if an I/O related error occurs.
+	 * @param sp
+	 *            the serial port to read from/write to.
+	 * @throws IOException on error.
 	 */
-	public void setCommPort(CommPort cp) throws IOException {
-		m_CommPort = cp;
-		if (cp != null) {
-			prepareStreams(cp.getInputStream(), cp.getOutputStream());
-		}
+	public void setSerialPort(SerialPort sp) throws IOException {
+		m_SerialPort = sp;
+		inputStream = new SerialInputStream(sp);
+		outputStream = new SerialOutputStream(sp);
+		prepareStreams(inputStream, outputStream);
 	}
 
 	/**
@@ -135,31 +136,13 @@ abstract public class ModbusSerialTransport implements ModbusTransport {
 	}// setEcho
 
 	/**
-	 * Describe <code>setReceiveThreshold</code> method here.
 	 * 
-	 * @param th
-	 *            an <code>int</code> value
-	 */
-	public void setReceiveThreshold(int th) {
-		try {
-			m_CommPort.enableReceiveThreshold(th); /* chars */
-		} catch (UnsupportedCommOperationException e) {
-			System.out.println(e.getMessage());
-		}
-	}
-
-	/**
-	 * Describe <code>setReceiveTimeout</code> method here.
 	 * 
 	 * @param ms
 	 *            an <code>int</code> value
 	 */
 	public void setReceiveTimeout(int ms) {
-		try {
-			m_CommPort.enableReceiveTimeout(ms); /* milliseconds */
-		} catch (UnsupportedCommOperationException e) {
-			System.out.println(e.getMessage());
-		}
+		inputStream.setTimeout(ms);
 	}
 
 	/**
@@ -177,16 +160,16 @@ abstract public class ModbusSerialTransport implements ModbusTransport {
 	public void readEcho(int len) throws IOException {
 
 		byte echoBuf[] = new byte[len];
-		setReceiveThreshold(len);
-		int echoLen = m_CommPort.getInputStream().read(echoBuf, 0, len);
-		if (Modbus.debug)
-			System.out
-					.println("Echo: " + ModbusUtil.toHex(echoBuf, 0, echoLen));
-		m_CommPort.disableReceiveThreshold();
-		if (echoLen != len) {
+		try {
+			inputStream.blockingRead(echoBuf);
+		} catch (IOException e) {
 			if (Modbus.debug)
-				System.err.println("Error: Transmit echo not received.");
-			throw new IOException("Echo not received.");
+				System.err.println("Error: Transmit echo not received (serial port exception).");
+			throw e;
+		}
+		
+		if (Modbus.debug) {
+			System.out.println("Echo: " + ModbusUtil.toHex(echoBuf, 0, echoBuf.length));
 		}
 	}// readEcho
 

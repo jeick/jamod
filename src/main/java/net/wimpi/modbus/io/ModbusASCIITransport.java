@@ -26,14 +26,17 @@ import net.wimpi.modbus.util.ModbusUtil;
 
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+
+import jssc.SerialInputStream;
+import jssc.SerialOutputStream;
 
 /**
  * Class that implements the Modbus/ASCII transport flavor.
  * 
  * @author Dieter Wimberger
  * @author John Charlton
+ * @author Charles Hache
+ * 
  * @version @version@ (@date@)
  */
 public class ModbusASCIITransport extends ModbusSerialTransport {
@@ -230,7 +233,7 @@ public class ModbusASCIITransport extends ModbusSerialTransport {
 	 * @throws IOException
 	 *             if an I\O related error occurs.
 	 */
-	public void prepareStreams(InputStream in, OutputStream out)
+	public void prepareStreams(SerialInputStream in, SerialOutputStream out)
 			throws IOException {
 		m_InputStream = new DataInputStream(new ASCIIInputStream(in));
 		m_OutputStream = new ASCIIOutputStream(out);

@@ -21,17 +21,16 @@ package net.wimpi.modbus.util;
 
 import net.wimpi.modbus.Modbus;
 
-import gnu.io.SerialPort;
 import java.util.Properties;
 
+import jssc.SerialPort;
+
 /**
- * Helper class wrapping all serial port communication parameters. <<<<<<< HEAD
- * Very similar to the gnu.io demos, however, not the same. ======= Very similar
- * to the javax.comm demos, however, not the same. >>>>>>>
- * b0e99dd6336efe72ae5eeec015ba5f8d8d8ebacb
+ * Helper class wrapping all serial port communication parameters.
  * 
  * @author Dieter Wimberger
  * @author John Charlton
+ * @author Charles Hache
  * @version @version@ (@date@)
  */
 public class SerialParameters {
@@ -60,7 +59,7 @@ public class SerialParameters {
 		m_Stopbits = SerialPort.STOPBITS_1;
 		m_Parity = SerialPort.PARITY_NONE;
 		m_Encoding = Modbus.DEFAULT_SERIAL_ENCODING;
-		m_ReceiveTimeout = 500; // 5 secs
+		m_ReceiveTimeout = 500; // 0.5 secs
 		m_Echo = false;
 	}// constructor
 
@@ -84,6 +83,8 @@ public class SerialParameters {
 	 *            The type of parity.
 	 * @param echo
 	 *            Flag for setting the RS485 echo mode.
+	 * @param timeout
+	 * 			  Timeout for serial reads, in milliseconds.
 	 */
 	public SerialParameters(String portName, int baudRate, int flowControlIn,
 			int flowControlOut, int databits, int stopbits, int parity,

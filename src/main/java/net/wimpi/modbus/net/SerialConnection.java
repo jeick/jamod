@@ -23,11 +23,10 @@ import net.wimpi.modbus.Modbus;
 import net.wimpi.modbus.io.*;
 import net.wimpi.modbus.util.SerialParameters;
 
-import gnu.io.*;
-
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.TooManyListenersException;
+
+import jssc.SerialPort;
+import jssc.SerialPortException;
 
 /**
  * Class that implements a serial connection which can be used for master and
@@ -35,16 +34,15 @@ import java.util.TooManyListenersException;
  * 
  * @author Dieter Wimberger
  * @author John Charlton
+ * @author Charles Hache
  * @version @version@ (@date@)
  */
-public class SerialConnection implements SerialPortEventListener {
+public class SerialConnection {
 
 	private SerialParameters m_Parameters;
 	private ModbusSerialTransport m_Transport;
-	private CommPortIdentifier m_PortIdentifyer;
 	private SerialPort m_SerialPort;
 	private boolean m_Open;
-	private InputStream m_SerialIn;
 
 	/**
 	 * Creates a SerialConnection object and initilizes variables passed in as
@@ -84,36 +82,17 @@ public class SerialConnection implements SerialPortEventListener {
 	 *             if an error occurs.
 	 */
 	public void open() throws Exception {
+		
+		// 1. create the port
+		m_SerialPort = new SerialPort(m_Parameters.getPortName());
 
-		// 1. obtain a CommPortIdentifier instance
-		try {
-			m_PortIdentifyer = CommPortIdentifier
-					.getPortIdentifier(m_Parameters.getPortName());
-		} catch (NoSuchPortException e) {
-			if (Modbus.debug)
-				System.out.println(e.getMessage());
-			throw new Exception(e.getMessage());
-		}
-		// System.out.println("Got Port Identifier");
-
-		// 2. open the port, wait for given timeout
-		try {
-			m_SerialPort = (SerialPort) m_PortIdentifyer.open(
-					"Modbus Serial Master", 30000);
-		} catch (PortInUseException e) {
-			if (Modbus.debug)
-				System.out.println(e.getMessage());
-
-			throw new Exception(e.getMessage());
-		}
-		// System.out.println("Got Serial Port");
-
-		// 3. set the parameters
+		// 2. set the parameters, open the port
 		try {
 			setConnectionParameters();
+			m_SerialPort.openPort();
 		} catch (Exception e) {
 			// ensure it is closed
-			m_SerialPort.close();
+			m_SerialPort.closePort();
 			if (Modbus.debug)
 				System.out.println(e.getMessage());
 			throw e;
@@ -124,9 +103,8 @@ public class SerialConnection implements SerialPortEventListener {
 		} else if (Modbus.SERIAL_ENCODING_RTU
 				.equals(m_Parameters.getEncoding())) {
 			m_Transport = new ModbusRTUTransport();
-			setReceiveTimeout(m_Parameters.getReceiveTimeout()); // just here
-																	// for the
-																	// moment.
+			setReceiveTimeout(m_Parameters.getReceiveTimeout());
+																
 		} else if (Modbus.SERIAL_ENCODING_BIN
 				.equals(m_Parameters.getEncoding())) {
 			m_Transport = new ModbusBINTransport();
@@ -136,12 +114,9 @@ public class SerialConnection implements SerialPortEventListener {
 		// Open the input and output streams for the connection. If they won't
 		// open, close the port before throwing an exception.
 		try {
-			m_SerialIn = m_SerialPort.getInputStream();
-			m_Transport.setCommPort(m_SerialPort);
-			// m_Transport.prepareStreams(m_SerialIn,
-			// m_SerialPort.getOutputStream());
+			m_Transport.setSerialPort(m_SerialPort);
 		} catch (IOException e) {
-			m_SerialPort.close();
+			m_SerialPort.closePort();
 			if (Modbus.debug)
 				System.out.println(e.getMessage());
 
@@ -149,37 +124,17 @@ public class SerialConnection implements SerialPortEventListener {
 		}
 		// System.out.println("i/o Streams prepared");
 
-		// Add this object as an event listener for the serial port.
-		try {
-			m_SerialPort.addEventListener(this);
-		} catch (TooManyListenersException e) {
-			m_SerialPort.close();
-			if (Modbus.debug)
-				System.out.println(e.getMessage());
-			throw new Exception("too many listeners added");
-		}
-
-		// Set notifyOnBreakInterrup to allow event driven break handling.
-		m_SerialPort.notifyOnBreakInterrupt(true);
-
 		m_Open = true;
 	}// open
 
 	public void setReceiveTimeout(int ms) {
 		// Set receive timeout to allow breaking out of polling loop during
 		// input handling.
-		try {
-			m_SerialPort.enableReceiveTimeout(ms);
-		} catch (UnsupportedCommOperationException e) {
-			if (Modbus.debug)
-				System.out.println(e.getMessage());
-		}
+		m_Transport.setReceiveTimeout(ms);
 	}// setReceiveTimeout
 
 	/**
 	 * Sets the connection parameters to the setting in the parameters object.
-	 * If set fails return the parameters object to origional settings and throw
-	 * exception.
 	 * 
 	 * @throws Exception
 	 *             if the configured parameters cannot be set properly on the
@@ -187,39 +142,27 @@ public class SerialConnection implements SerialPortEventListener {
 	 */
 	public void setConnectionParameters() throws Exception {
 
-		// Save state of parameters before trying a set.
-		int oldBaudRate = m_SerialPort.getBaudRate();
-		int oldDatabits = m_SerialPort.getDataBits();
-		int oldStopbits = m_SerialPort.getStopBits();
-		int oldParity = m_SerialPort.getParity();
-		// int oldFlowControl = m_SerialPort.getFlowControlMode();
-
-		// Set connection parameters, if set fails return parameters object
-		// to original state.
+		// Set connection parameters
 		try {
-			m_SerialPort.setSerialPortParams(m_Parameters.getBaudRate(),
-					m_Parameters.getDatabits(), m_Parameters.getStopbits(),
+			m_SerialPort.setParams(m_Parameters.getBaudRate(),
+					m_Parameters.getDatabits(), m_Parameters.getStopbits(), 
 					m_Parameters.getParity());
-		} catch (UnsupportedCommOperationException e) {
-			m_Parameters.setBaudRate(oldBaudRate);
-			m_Parameters.setDatabits(oldDatabits);
-			m_Parameters.setStopbits(oldStopbits);
-			m_Parameters.setParity(oldParity);
+		} catch (SerialPortException e) {
 			if (Modbus.debug)
 				System.out.println(e.getMessage());
 
-			throw new Exception("Unsupported parameter");
+			throw new Exception(e);
 		}
 
 		// Set flow control.
 		try {
 			m_SerialPort.setFlowControlMode(m_Parameters.getFlowControlIn()
 					| m_Parameters.getFlowControlOut());
-		} catch (UnsupportedCommOperationException e) {
+		} catch (SerialPortException e) {
 			if (Modbus.debug)
 				System.out.println(e.getMessage());
 
-			throw new Exception("Unsupported flow control");
+			throw new Exception(e);
 		}
 	}// setConnectionParameters
 
@@ -236,12 +179,14 @@ public class SerialConnection implements SerialPortEventListener {
 		if (m_SerialPort != null) {
 			try {
 				m_Transport.close();
-				m_SerialIn.close();
 			} catch (IOException e) {
 				System.err.println(e);
 			}
 			// Close the port.
-			m_SerialPort.close();
+			try {
+				m_SerialPort.closePort();
+			} catch (SerialPortException e) {
+			}
 		}
 
 		m_Open = false;
@@ -255,33 +200,5 @@ public class SerialConnection implements SerialPortEventListener {
 	public boolean isOpen() {
 		return m_Open;
 	}// isOpen
-
-	public void serialEvent(SerialPortEvent e) {
-		// Determine type of event.
-		switch (e.getEventType()) {
-		// This event is ignored, the application reads directly from
-		// the serial input stream
-		case SerialPortEvent.DATA_AVAILABLE:
-			/*
-			 * try { int amount = m_SerialIn.available(); while (amount > 0) {
-			 * try { byte[] buffer = new byte[amount]; if ((amount =
-			 * m_SerialIn.read(buffer, 0, amount)) > 0) { m_Pipe.write (buffer,
-			 * 0, amount); } amount = m_SerialIn.available(); } catch
-			 * (IOException ex) { System.err.println("Error: Comm event read: "
-			 * + ex); ex.printStackTrace(); return; } } } catch (Exception ex) {
-			 * //handle
-			 * 
-			 * }
-			 */
-			break;
-		case SerialPortEvent.BI:
-			if (Modbus.debug)
-				System.out.println("Serial port break detected");
-			break;
-		default:
-			if (Modbus.debug)
-				System.out.println("Serial port event: " + e.getEventType());
-		}
-	}// serialEvent
 
 }// class SerialConnection
