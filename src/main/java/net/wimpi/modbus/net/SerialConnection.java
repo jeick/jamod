@@ -88,13 +88,13 @@ public class SerialConnection {
 
 		// 2. set the parameters, open the port
 		try {
-			setConnectionParameters();
 			m_SerialPort.openPort();
+			setConnectionParameters();
 		} catch (Exception e) {
-			// ensure it is closed
-			m_SerialPort.closePort();
+			if (m_SerialPort.isOpened())
+				m_SerialPort.closePort();
 			if (Modbus.debug)
-				System.out.println(e.getMessage());
+				System.out.println("Failure opening port: "+e.getMessage());
 			throw e;
 		}
 

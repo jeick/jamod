@@ -46,6 +46,7 @@ abstract public class ModbusSerialTransport implements ModbusTransport {
 	protected boolean m_Echo = false; // require RS-485 echo processing
 	protected SerialInputStream inputStream;
 	protected SerialOutputStream outputStream;
+	protected int timeout=0;
 
 	/**
 	 * <code>readResponse</code> reads a response message from the slave
@@ -112,6 +113,7 @@ abstract public class ModbusSerialTransport implements ModbusTransport {
 	public void setSerialPort(SerialPort sp) throws IOException {
 		m_SerialPort = sp;
 		inputStream = new SerialInputStream(sp);
+		inputStream.setTimeout(timeout);
 		outputStream = new SerialOutputStream(sp);
 		prepareStreams(inputStream, outputStream);
 	}
@@ -142,7 +144,10 @@ abstract public class ModbusSerialTransport implements ModbusTransport {
 	 *            an <code>int</code> value
 	 */
 	public void setReceiveTimeout(int ms) {
-		inputStream.setTimeout(ms);
+		timeout = ms;
+		if (inputStream != null) {
+			inputStream.setTimeout(timeout);
+		}
 	}
 
 	/**
