@@ -1,0 +1,36 @@
+        ------
+        Knowledge Base
+        ------
+        Dieter Wimberger
+        ------
+        2010-02-14
+        ------
+
+%{snippet|verbatim=false|file=src/site/resources/search_ad.txt}
+
+Protocol and Specification
+
+    * Follow the link "Modbus Standard Library" on the Modbus user & 
+      developer community site ({{http://www.modbus.org}}).
+
+    * {{{./protocol.html}<Understanding the Protocol>}} an introduction of 
+          the Modbus protocol it's implementations.
+
+    * {{{./modbus_udp.html}<Modbus/UDP>}} an UDP based flavor of Modbus.
+
+    * {{{./modbus_bin.html}<Modbus/BIN>}} a new binary serial flavor of Modbus.
+
+Related Sites and Efforts
+
+    * Modbus User and Developer Community Site ({{http://www.modbus.org}}).
+
+    * <jModbus> ({{http://jmodbus.sourceforge.net"}}).
+
+    * <jamod2> ({{http://jamod2.sourceforge.net/}}), seems to be a fork.
+
+    * <modbus4j> ({{http://sourceforge.net/projects/modbus4j/}}), copied most of jamod's OO design, but is an independent LGPL'ed implementation.
+
+    * <Field Talk/Java> ({{http://www.focus-sw.com/FTMP_MBJV.html}}), a commercial Modbus Master Package).
+
+    * Wingpath Software Development ({{http://www.wingpath.co.uk}}),
+      provides commercial Java based Modbus Master and Slave implementations.

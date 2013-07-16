@@ -1,0 +1,45 @@
+        ------
+        HOW-TO's
+        ------
+        Dieter Wimberger
+        ------
+        2010-02-15
+        ------
+
+%{snippet|verbatim=false|file=src/site/resources/search_ad.txt}
+
+About
+
+    This part of the documentation aims at getting you started with jamod, as well 
+    as at opening doors for improvement and extension of the library itself.
+    
+    If you want to become familiar with Modbus, it is highly recommended to take a 
+    look at {{{./protocol.html}Understanding the Protocol}} and the specifications
+    (see {{{./index.html}Knowledge Base Index}}).
+ 
+ 
+Available Documents
+
+    * <<Master>>
+    
+        * {{{./serial_master_howto.html}Serial Master How-To}}
+        
+        * {{{./tcp_master_howto.html}TCP Master How-To}}
+        
+        * {{{./udp_master_howto.html}UDP Master How-To}}
+        
+    * <<Slave>>
+    
+        * {{{./processimage.html}Understanding the Process Image}}
+        
+        * {{{./serial_slave_howto.html}Serial Slave How-To}}
+        
+        * {{{./tcp_slave_howto.html}TCP Slave How-To}}
+        
+        * {{{./udp_slave_howto.html}UDP Slave How-To}}
+        
+    []
+
+API Documention (javadocs)
+
+    * {{{../apidocs/index.html}API Documentation (javadocs)}}
