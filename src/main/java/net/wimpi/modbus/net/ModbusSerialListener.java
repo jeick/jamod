@@ -16,6 +16,8 @@
 
 package net.wimpi.modbus.net;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import net.wimpi.modbus.Modbus;
 import net.wimpi.modbus.ModbusCoupler;
 import net.wimpi.modbus.ModbusIOException;
@@ -34,7 +36,7 @@ import net.wimpi.modbus.util.SerialParameters;
 public class ModbusSerialListener implements Runnable {
 
 	// Members
-	private boolean m_Listening;
+	private final AtomicBoolean m_Listening;
 	private SerialConnection m_SerialCon;
 	private Thread m_Listener;
 
@@ -45,6 +47,7 @@ public class ModbusSerialListener implements Runnable {
 	 *            a <tt>SerialParameters</tt> instance.
 	 */
 	public ModbusSerialListener(SerialParameters params) {
+		m_Listening = new AtomicBoolean(false);
 		m_SerialCon = new SerialConnection(params);
 	}// constructor
 
@@ -54,19 +57,15 @@ public class ModbusSerialListener implements Runnable {
 	public void start() {
 		m_Listener = new Thread(this);
 		m_Listener.start();
-		m_Listening = true;
+		m_Listening.set(true);
 	}// start
 
 	/**
 	 * Stops this <tt>ModbusTCPListener</tt>.
 	 */
 	public void stop() {
-		m_Listening = false;
-		try {
-			m_Listener.join();
-		} catch (Exception ex) {
-			//
-		}
+		m_Listening.set(false);
+		m_Listener.interrupt();
 	}// stop
 
 	/**
@@ -74,11 +73,10 @@ public class ModbusSerialListener implements Runnable {
 	 */
 	public void run() {
 		try {
-			m_Listening = true;
 			m_SerialCon.open();
 			// System.out.println("Opened Serial connection.");
 			ModbusTransport transport = m_SerialCon.getModbusTransport();
-			do {
+			while (m_Listening.get()) {
 				try {
 					// 1. read the request
 					ModbusRequest request = transport.readRequest();
@@ -105,8 +103,7 @@ public class ModbusSerialListener implements Runnable {
 					ex.printStackTrace();
 					continue;
 				}
-			} while (m_Listening);
-
+			}
 		} catch (Exception e) {
 			// FIXME: this is a major failure, how do we handle this
 			e.printStackTrace();
@@ -121,7 +118,7 @@ public class ModbusSerialListener implements Runnable {
 	 *         otherwise.
 	 */
 	public boolean isListening() {
-		return m_Listening;
+		return m_Listening.get();
 	}// isListening
 
 }// class ModbusSerialListener

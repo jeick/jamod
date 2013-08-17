@@ -17,6 +17,7 @@
 package net.wimpi.modbus.net;
 
 import java.net.InetAddress;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import net.wimpi.modbus.Modbus;
 import net.wimpi.modbus.ModbusCoupler;
@@ -37,13 +38,14 @@ public class ModbusUDPListener {
 	private ModbusUDPHandler m_Handler;
 	private Thread m_HandlerThread;
 	private int m_Port = Modbus.DEFAULT_PORT;
-	private boolean m_Listening;
+	private final AtomicBoolean m_Listening;
 	private InetAddress m_Interface;
 
 	/**
 	 * Constructs a new ModbusUDPListener instance.
 	 */
 	public ModbusUDPListener() {
+		m_Listening = new AtomicBoolean(false);
 	}// ModbusUDPListener
 
 	/**
@@ -54,6 +56,7 @@ public class ModbusUDPListener {
 	 *            an <tt>InetAddress</tt> instance.
 	 */
 	public ModbusUDPListener(InetAddress ifc) {
+		m_Listening = new AtomicBoolean(false);
 		m_Interface = ifc;
 	}// ModbusUDPListener
 
@@ -84,6 +87,7 @@ public class ModbusUDPListener {
 	public void start() {
 		// start listening
 		try {
+			m_Listening.set(true);
 			if (m_Interface == null) {
 				m_Terminal = new UDPSlaveTerminal(InetAddress.getLocalHost());
 			} else {
@@ -97,9 +101,9 @@ public class ModbusUDPListener {
 			m_HandlerThread.start();
 
 		} catch (Exception e) {
+			m_Listening.set(false);
 			// FIXME: this is a major failure, how do we handle this
 		}
-		m_Listening = true;
 	}// start
 
 	/**
@@ -107,9 +111,9 @@ public class ModbusUDPListener {
 	 */
 	public void stop() {
 		// stop listening
+		m_Listening.set(false);
 		m_Terminal.deactivate();
 		m_Handler.stop();
-		m_Listening = false;
 	}// stop
 
 	/**
@@ -120,15 +124,16 @@ public class ModbusUDPListener {
 	 *         otherwise.
 	 */
 	public boolean isListening() {
-		return m_Listening;
+		return m_Listening.get();
 	}// isListening
 
 	class ModbusUDPHandler implements Runnable {
 
 		private ModbusUDPTransport m_Transport;
-		private boolean m_Continue = true;
+		private final AtomicBoolean m_Continue;
 
 		public ModbusUDPHandler(ModbusUDPTransport transport) {
+			m_Continue = new AtomicBoolean(true);
 			m_Transport = transport;
 		}// constructor
 
@@ -139,6 +144,12 @@ public class ModbusUDPListener {
 					ModbusRequest request = m_Transport.readRequest();
 					// System.out.println("Request:" + request.getHexMessage());
 					ModbusResponse response = null;
+					
+					// Getting the response could take a while, so bail
+					// if we already want to exit
+					if (!m_Continue.get()) {
+						break;
+					}
 
 					// test if Process image exists
 					if (ModbusCoupler.getReference().getProcessImage() == null) {
@@ -158,7 +169,7 @@ public class ModbusUDPListener {
 					// System.out.println("Response:" +
 					// response.getHexMessage());
 					m_Transport.writeMessage(response);
-				} while (m_Continue);
+				} while (m_Continue.get());
 			} catch (ModbusIOException ex) {
 				if (!ex.isEOF()) {
 					// other troubles, output for debug
@@ -174,7 +185,7 @@ public class ModbusUDPListener {
 		}// run
 
 		public void stop() {
-			m_Continue = false;
+			m_Continue.set(false);
 		}// stop
 
 	}// inner class ModbusUDPHandler

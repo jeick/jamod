@@ -25,6 +25,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import net.wimpi.modbus.Modbus;
 import net.wimpi.modbus.util.ThreadPool;
@@ -45,7 +46,7 @@ public class ModbusTCPListener implements Runnable {
 	private Thread m_Listener;
 	private int m_Port = Modbus.DEFAULT_PORT;
 	private int m_FloodProtection = 5;
-	private boolean m_Listening;
+	private final AtomicBoolean m_Listening;
 	private InetAddress m_Address;
 
 	/**
@@ -56,6 +57,7 @@ public class ModbusTCPListener implements Runnable {
 	 *            requests.
 	 */
 	public ModbusTCPListener(int poolsize) {
+		m_Listening = new AtomicBoolean(false);
 		m_ThreadPool = new ThreadPool(poolsize);
 		try {
 			m_Address = InetAddress.getLocalHost();
@@ -74,6 +76,7 @@ public class ModbusTCPListener implements Runnable {
 	 *            the interface to use for listening.
 	 */
 	public ModbusTCPListener(int poolsize, InetAddress addr) {
+		m_Listening = new AtomicBoolean(false);
 		m_ThreadPool = new ThreadPool(poolsize);
 		m_Address = addr;
 	}// constructor
@@ -103,21 +106,20 @@ public class ModbusTCPListener implements Runnable {
 	 */
 	public void start() {
 		m_Listener = new Thread(this);
+		m_Listening.set(true);
 		m_Listener.start();
-		m_Listening = true;
 	}// start
 
 	/**
 	 * Stops this <tt>ModbusTCPListener</tt>.
 	 */
 	public void stop() {
-		m_Listening = false;
+		m_Listening.set(false);
 		try {
 			m_ServerSocket.close();
-			m_Listener.join();
-			m_ThreadPool.killPool();
-		} catch (Exception ex) {
-			// ?
+			//No need to interrupt the thread because closing the
+			//socket will unblock it
+		} catch (IOException e) {
 		}
 	}// stop
 
@@ -147,7 +149,7 @@ public class ModbusTCPListener implements Runnable {
 				if (Modbus.debug)
 					System.out.println("Making new connection "
 							+ incoming.toString());
-				if (m_Listening) {
+				if (m_Listening.get()) {
 					// FIXME: Replace with object pool due to resource issues
 					m_ThreadPool.execute(new TCPConnectionHandler(
 							new TCPSlaveConnection(incoming)));
@@ -156,16 +158,15 @@ public class ModbusTCPListener implements Runnable {
 					// just close the socket
 					incoming.close();
 				}
-			} while (m_Listening);
+			} while (m_Listening.get());
 		} catch (SocketException iex) {
-			if (!m_Listening) {
-				return;
-			} else {
+			if (m_Listening.get()) {
 				iex.printStackTrace();
 			}
 		} catch (IOException e) {
-			// FIXME: this is a major failure, how do we handle this
+			// We'll get here if this listener gets closed
 		}
+		m_ThreadPool.killPool();
 	}// run
 
 	/**
@@ -176,7 +177,7 @@ public class ModbusTCPListener implements Runnable {
 	 *         otherwise.
 	 */
 	public boolean isListening() {
-		return m_Listening;
+		return m_Listening.get();
 	}// isListening
 
 	private void count() {
