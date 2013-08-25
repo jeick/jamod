@@ -56,8 +56,8 @@ public class ModbusSerialListener implements Runnable {
 	 */
 	public void start() {
 		m_Listener = new Thread(this);
-		m_Listener.start();
 		m_Listening.set(true);
+		m_Listener.start();
 	}// start
 
 	/**
