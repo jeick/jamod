@@ -75,7 +75,18 @@ public class TCPSlaveTest {
 				System.out.println("Listening...");
 			listener = new ModbusTCPListener(3);
 			listener.setPort(port);
+			
+			System.out.println("Listening to "+listener.getAddress().getCanonicalHostName()+" on port "+port);
+			
 			listener.start();
+			
+			System.out.println("Press enter to exit");
+			
+			System.in.read();
+			
+			System.out.println("Exiting...");
+			
+			listener.stop();
 
 		} catch (Exception ex) {
 			ex.printStackTrace();

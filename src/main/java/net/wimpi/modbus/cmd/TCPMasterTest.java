@@ -40,20 +40,23 @@ public class TCPMasterTest {
 	
 	public static void main(String[] args) {
 		int port = Modbus.DEFAULT_PORT;
-		
+		int unitId = 15; //Same as TCPSlaveTest.java
 		try {
 			if (args != null && args.length == 1) {
 				port = Integer.parseInt(args[0]);
 			}
-			TCPMasterConnection connection = new TCPMasterConnection(InetAddress.getLocalHost());
+			InetAddress addy = InetAddress.getLocalHost();
+			TCPMasterConnection connection = new TCPMasterConnection(addy);
 			connection.setTimeout(3000);
 			connection.setPort(port);
+			System.out.println("Trying to connect to "+addy.getCanonicalHostName()+" on port "+port);
 			connection.connect();
 			
 			ModbusTCPTransaction transaction = new ModbusTCPTransaction(connection);
 			
 			ModbusRequest request;
 			while ((request = getNextRequest()) != null) {
+				request.setUnitID(unitId);
 				transaction.setRequest(request);
 				transaction.execute();
 				ModbusResponse response = transaction.getResponse();
