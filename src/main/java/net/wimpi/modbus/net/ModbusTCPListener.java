@@ -39,15 +39,13 @@ import net.wimpi.modbus.util.ThreadPool;
  */
 public class ModbusTCPListener implements Runnable {
 
-	private static int c_RequestCounter = 0;
-
 	private ServerSocket m_ServerSocket = null;
 	private ThreadPool m_ThreadPool;
 	private Thread m_Listener;
 	private int m_Port = Modbus.DEFAULT_PORT;
 	private int m_FloodProtection = 5;
 	private final AtomicBoolean m_Listening;
-	private InetAddress m_Address;
+	private InetAddress m_Address = null;
 
 	/**
 	 * Constructs a ModbusTCPListener instance.<br>
@@ -62,7 +60,9 @@ public class ModbusTCPListener implements Runnable {
 		try {
 			m_Address = InetAddress.getLocalHost();
 		} catch (UnknownHostException ex) {
-
+			if (Modbus.debug)
+				System.out.println("Couldn't get the local address: "
+						+ ex.toString());
 		}
 	}// constructor
 
@@ -102,6 +102,15 @@ public class ModbusTCPListener implements Runnable {
 	}// setAddress
 
 	/**
+	 * Gets the address of the listening interface.
+	 * 
+	 * @return The address of the listening interface.
+	 */
+	public InetAddress getAddress() {
+		return m_Address;
+	}
+
+	/**
 	 * Starts this <tt>ModbusTCPListener</tt>.
 	 */
 	public void start() {
@@ -115,11 +124,14 @@ public class ModbusTCPListener implements Runnable {
 	 */
 	public void stop() {
 		m_Listening.set(false);
-		try {
-			m_ServerSocket.close();
-			//No need to interrupt the thread because closing the
-			//socket will unblock it
-		} catch (IOException e) {
+		if (m_ServerSocket != null) {
+			try {
+				m_ServerSocket.close();
+				m_Listener.interrupt(); // Interrupting is required as well as
+										// closing the socket
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}// stop
 
@@ -128,24 +140,30 @@ public class ModbusTCPListener implements Runnable {
 	 * <tt>TCPConnectionHandler</tt> instances.
 	 */
 	public void run() {
+
+		/*
+		 * A server socket is opened with a connectivity queue of a size
+		 * specified in int floodProtection. Concurrent login handling under
+		 * normal circumstances should be allright, denial of service attacks
+		 * via massive parallel program logins can probably be prevented.
+		 */
 		try {
-			/*
-			 * A server socket is opened with a connectivity queue of a size
-			 * specified in int floodProtection. Concurrent login handling under
-			 * normal circumstances should be allright, denial of service
-			 * attacks via massive parallel program logins can probably be
-			 * prevented.
-			 */
 			m_ServerSocket = new ServerSocket(m_Port, m_FloodProtection,
 					m_Address);
 			if (Modbus.debug)
 				System.out.println("Listenening to "
 						+ m_ServerSocket.toString() + "(Port " + m_Port + ")");
+		} catch (IOException e1) {
+			System.err.println("Couldn't start TCP listener:");
+			e1.printStackTrace();
+			m_Listening.set(false);
+		}
+		
+		Socket incoming = null;
 
-			// Infinite loop, taking care of resources in case of a lot of
-			// parallel logins
-			do {
-				Socket incoming = m_ServerSocket.accept();
+		while (m_Listening.get()) {
+			try {
+				incoming = m_ServerSocket.accept();
 				if (Modbus.debug)
 					System.out.println("Making new connection "
 							+ incoming.toString());
@@ -153,19 +171,33 @@ public class ModbusTCPListener implements Runnable {
 					// FIXME: Replace with object pool due to resource issues
 					m_ThreadPool.execute(new TCPConnectionHandler(
 							new TCPSlaveConnection(incoming)));
-					count();
-				} else {
-					// just close the socket
-					incoming.close();
 				}
-			} while (m_Listening.get());
-		} catch (SocketException iex) {
-			if (m_Listening.get()) {
-				iex.printStackTrace();
+				
+				// We can get these exceptions while quitting. If so, hide the
+				// error message. If the exception occurs during regular
+				// operation though, print the message
+			} catch (SocketException iex) {
+				if (m_Listening.get()) {
+					iex.printStackTrace();
+				}
+			} catch (IOException e) {
+				if (m_Listening.get()) {
+					e.printStackTrace();
+				}
 			}
-		} catch (IOException e) {
-			// We'll get here if this listener gets closed
+		} //while listening
+		
+		if (Modbus.debug)
+			System.out.println("ModbusTCPListener is quitting");
+		
+		if (incoming != null) {
+			try {
+				incoming.close();
+			} catch (IOException e) {
+				//Don't care.
+			}
 		}
+		
 		m_ThreadPool.killPool();
 	}// run
 
@@ -179,15 +211,5 @@ public class ModbusTCPListener implements Runnable {
 	public boolean isListening() {
 		return m_Listening.get();
 	}// isListening
-
-	private void count() {
-		c_RequestCounter++;
-		if (c_RequestCounter == REQUESTS_TOGC) {
-			System.gc();
-			c_RequestCounter = 0;
-		}
-	}// count
-
-	private static final int REQUESTS_TOGC = 10;
 
 }// class ModbusTCPListener

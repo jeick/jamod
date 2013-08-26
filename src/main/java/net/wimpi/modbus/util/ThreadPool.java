@@ -20,6 +20,7 @@
 package net.wimpi.modbus.util;
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Class implementing a simple thread pool.
@@ -30,7 +31,7 @@ import java.util.ArrayList;
 public class ThreadPool {
 
 	// instance attributes and associations
-	private LinkedQueue m_TaskPool;
+	private final LinkedQueue m_TaskPool;
 	private ArrayList<PoolThread> m_Threads;
 	private int m_Size = 1;
 
@@ -54,9 +55,11 @@ public class ThreadPool {
 	 * @param task
 	 *            the <tt>Runnable</tt> to be executed.
 	 */
-	public synchronized void execute(Runnable task) {
+	public void execute(Runnable task) {
 		try {
-			m_TaskPool.put(task);
+			synchronized(m_TaskPool) {
+				m_TaskPool.put(task);
+			}
 		} catch (InterruptedException ex) {
 			// FIXME: Handle!?
 		}
@@ -91,9 +94,8 @@ public class ThreadPool {
 	 * @version @version@ (@date@)
 	 */
 	private class PoolThread extends Thread {
-		private Boolean keepRunning = new Boolean(false);
+		private final AtomicBoolean keepRunning = new AtomicBoolean(false);
 		private Runnable task;
-		private Object taskLock = new Object();
 
 		/**
 		 * Runs the <tt>PoolThread</tt>.
@@ -106,28 +108,22 @@ public class ThreadPool {
 			setRunning(true);
 			do {
 				try {
-					synchronized (taskLock) {
-						task = (Runnable) m_TaskPool.take();
-						task.run();
-					}
+					task = (Runnable) m_TaskPool.take();
+					task.run();
+					
 				} catch (Exception e) {
 					// Ignore, we were likely just interrupted. Recheck if we
 					// should be running or not.
-					continue;
 				}
 			} while (isRunning());
 		}
 
 		void setRunning(boolean run) {
-			synchronized (keepRunning) {
-				keepRunning = run;
-			}
+			keepRunning.set(run);
 		}
 
 		boolean isRunning() {
-			synchronized (keepRunning) {
-				return keepRunning;
-			}
+			return keepRunning.get();
 		}
 	}// PoolThread
 
