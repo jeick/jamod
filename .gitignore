@@ -1,3 +1,9 @@
 *.class
-
 package.html
+
+# IntelliJ IDEA
+.idea
+*.iml
+
+# Maven
+target
