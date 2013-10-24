@@ -20,6 +20,7 @@ import net.wimpi.modbus.Modbus;
 import net.wimpi.modbus.io.ModbusTransport;
 
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  * Class that implements a UDPMasterConnection.
@@ -36,17 +37,33 @@ public class UDPMasterConnection {
 
 	private InetAddress m_Address;
 	private int m_Port = Modbus.DEFAULT_PORT;
+    private InetAddress m_LocalAddress;
+    private int m_LocalPort;
 
-	/**
-	 * Constructs a <tt>UDPMasterConnection</tt> instance with a given
-	 * destination address.
-	 * 
-	 * @param adr
-	 *            the destination <tt>InetAddress</tt>.
-	 */
-	public UDPMasterConnection(InetAddress adr) {
-		m_Address = adr;
-	}// constructor
+    /**
+     * Constructs a <tt>UDPMasterConnection</tt> instance with a given
+     * destination address, local address and local port.
+     *
+     * @param adr the destination <tt>InetAddress</tt>.
+     * @param localAddress the local <tt>InetAddress</tt>.
+     * @param localPort the local <tt>port</tt>.
+     */
+    public UDPMasterConnection(InetAddress adr, InetAddress localAddress, int localPort) {
+        m_Address = adr;
+        m_LocalAddress = localAddress;
+        m_LocalPort = localPort;
+    }// constructor
+
+    /**
+     * Constructs a <tt>UDPMasterConnection</tt> instance with a given
+     * destination address.
+     *
+     * @param adr
+     *            the destination <tt>InetAddress</tt>.
+     */
+    public UDPMasterConnection(InetAddress adr) throws UnknownHostException {
+        this(adr, InetAddress.getLocalHost(), 5000);
+    }// constructor
 
 	/**
 	 * Opens this <tt>UDPMasterConnection</tt>.
@@ -57,8 +74,8 @@ public class UDPMasterConnection {
 	public synchronized void connect() throws Exception {
 		if (!m_Connected) {
 			m_Terminal = new UDPMasterTerminal();
-			m_Terminal.setLocalAddress(InetAddress.getLocalHost());
-			m_Terminal.setLocalPort(5000);
+            m_Terminal.setLocalAddress(m_LocalAddress);
+            m_Terminal.setLocalPort(m_LocalPort);
 			m_Terminal.setRemoteAddress(m_Address);
 			m_Terminal.setRemotePort(m_Port);
 			m_Terminal.setTimeout(m_Timeout);

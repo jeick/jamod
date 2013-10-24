@@ -59,15 +59,7 @@ public class ModbusUDPMaster {
 		try {
 			m_SlaveAddress = InetAddress.getByName(addr);
 			m_Connection = new UDPMasterConnection(m_SlaveAddress);
-			m_ReadCoilsRequest = new ReadCoilsRequest();
-			m_ReadInputDiscretesRequest = new ReadInputDiscretesRequest();
-			m_WriteCoilRequest = new WriteCoilRequest();
-			m_WriteMultipleCoilsRequest = new WriteMultipleCoilsRequest();
-			m_ReadInputRegistersRequest = new ReadInputRegistersRequest();
-			m_ReadMultipleRegistersRequest = new ReadMultipleRegistersRequest();
-			m_WriteSingleRegisterRequest = new WriteSingleRegisterRequest();
-			m_WriteMultipleRegistersRequest = new WriteMultipleRegistersRequest();
-
+            initialize();
 		} catch (UnknownHostException e) {
 			throw new RuntimeException(e.getMessage());
 		}
@@ -87,6 +79,42 @@ public class ModbusUDPMaster {
 		this(addr);
 		m_Connection.setPort(port);
 	}// constructor
+
+    /**
+     * Constructs a new master facade instance for communication with a given
+     * slave.
+     *
+     * @param addr
+     *            an internet address as resolvable IP name or IP number,
+     *            specifying the slave to communicate with.
+     * @param port
+     *            the port the slave is listening to.
+     * @param localAddress
+     *            the local <tt>InetAddress</tt>.
+     * @param localPort
+     *            the local <tt>port</tt>.
+     */
+    public ModbusUDPMaster(String addr, int port, String localAddress, int localPort) {
+        try {
+            m_SlaveAddress = InetAddress.getByName(addr);
+            m_Connection = new UDPMasterConnection(m_SlaveAddress, InetAddress.getByName(localAddress), localPort);
+            m_Connection.setPort(port);
+            initialize();
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }// constructor
+
+    private void initialize() {
+        m_ReadCoilsRequest = new ReadCoilsRequest();
+        m_ReadInputDiscretesRequest = new ReadInputDiscretesRequest();
+        m_WriteCoilRequest = new WriteCoilRequest();
+        m_WriteMultipleCoilsRequest = new WriteMultipleCoilsRequest();
+        m_ReadInputRegistersRequest = new ReadInputRegistersRequest();
+        m_ReadMultipleRegistersRequest = new ReadMultipleRegistersRequest();
+        m_WriteSingleRegisterRequest = new WriteSingleRegisterRequest();
+        m_WriteMultipleRegistersRequest = new WriteMultipleRegistersRequest();
+    }
 
 	/**
 	 * Connects this <tt>ModbusUDPMaster</tt> with the slave.
